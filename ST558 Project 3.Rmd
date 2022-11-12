@@ -1,11 +1,19 @@
 ---
-title: "ST558 Project 3"
+title: "ST558 Project 3 Group F"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
 ---
 
+<!-- setup -->
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+#install.packages ("caret")
+library("caret")
+
+#set seed for simulation reproducibility 
+#same seed will be utilized below in the Parallel Computing section of HW6
+set.seed(123)
 ```
 
 # Introduction
@@ -118,3 +126,16 @@ points on the project.
 • You should use Good Programming Practices when coding (see wolfware). If you do not follow GPP you can lose up to 40 points on the project.  
 • You should use appropriate markdown options/formatting (you can lose up to 20 points) for not doing so.
 -->
+
+<!-- code needed to render pdf file  -->
+
+```{r, echo=FALSE, eval=FALSE}
+#this code need to be copied and ran in the console to print out results
+#otherwise running from within the program doesn't print out every result
+#e.g. combo object and the fina proportions tibble
+
+rmarkdown:: render("ST558 Project 3.Rmd",
+                   output_format = "github_document",
+                   output_file = "README.md",
+                   output_options = list(html_preview = FALSE, keep_html = FALSE, toc = TRUE, toc_depth = "6", df_print = "tibble"))
+```

@@ -1,4 +1,4 @@
-ST558 Project 3
+ST558 Project 3 Group F
 ================
 Magaritte Nguyen and Matthew Sookoo
 2022-11-12
@@ -26,6 +26,8 @@ Magaritte Nguyen and Matthew Sookoo
 -   <a href="#automation" id="toc-automation">Automation</a>
 -   <a href="#submission" id="toc-submission">Submission</a>
 -   <a href="#group-issues" id="toc-group-issues">Group Issues</a>
+
+<!-- setup -->
 
 # Introduction
 
@@ -224,3 +226,4 @@ points on the project.
 • You should use Good Programming Practices when coding (see wolfware). If you do not follow GPP you can lose up to 40 points on the project.  
 • You should use appropriate markdown options/formatting (you can lose up to 20 points) for not doing so.
 -->
+<!-- code needed to render pdf file  -->
