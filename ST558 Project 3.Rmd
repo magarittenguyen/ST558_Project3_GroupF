@@ -165,5 +165,5 @@ rmarkdown:: render("ST558 Project 3.Rmd",
  # - render in the console with code above
  # - click files 3-4 in the Git tab
  # - commit w/ comment button
- # - push .rmd file
+ # - push .rmd file 
 ```
