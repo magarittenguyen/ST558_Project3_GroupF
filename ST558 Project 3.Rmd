@@ -3,20 +3,69 @@ title: "ST558 Project 3 Group F"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
 ---
-
-<!-- setup -->
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
-#install.packages ("caret")
-library("caret")
-
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 #set seed for simulation reproducibility 
-#same seed will be utilized below in the Parallel Computing section of HW6
+
 set.seed(123)
 ```
 
 # Introduction
+
+Our goal with this project is to create predictive models and automating Markdown reports. This dataset summarizes a heterogeneous set of features about articles published by Mashable (www.mashable.com) in a period of two years. We will summarize the data and try to predict the number of shares using linear regression, Random forest and boosting (will add more later)
+
+
+
+# Required Packages
+
+To use the functions for interacting with the API, the following packages are used:
+
+* `tidyverse`: Tons of useful features for data manipulation and visualization!
+* `caret`: Used for predictive modelling.
+
+MORE ADDED LATER AS REQUIRED
+
+
+```{r libraries, include = FALSE}
+library(tidyverse)
+library(caret)
+```
+
+# Data
+
+Firstly, we read in the data using `read_csv()`
+```{r}
+rawdata1<-read_csv("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\OnlineNewsPopularity.csv")
+
+rawdata1
+
+```
+
+we now subset the data for the channel of interest lifestyle
+
+```{r}
+lifestyle1 <- rawdata1 %>% 
+            filter(data_channel_is_lifestyle == 1)
+
+lifestyle1
+
+
+```
+
+
+# Summarizations
+
+
+
+```{r}
+ggplot(data=lifestyle1, aes(y=shares, x=rate_positive_words)) + geom_point()
+```
+
+
+
+
+
+
 
 
 # Project Objectives
@@ -56,16 +105,16 @@ Here, `read_csv()` is used to read in the OnlineNewsPopularity.csv data and we a
 #install.packages("caret")
 
 #read in data set .csv file in full
-Lifestyle <- readr::read_csv(
-             file="D:/ST558/Project 3/ST558_Project3_GroupF/OnlineNewsPopularity.csv", 
-             show_col_types = FALSE)
+#Lifestyle <- readr::read_csv(
+            # file="D:/ST558/Project 3/ST558_Project3_GroupF/OnlineNewsPopularity.csv", 
+           #  show_col_types = FALSE)
 ```
 
 
 ``` {r, echo=TRUE, eval=TRUE}
 #subsetting the data for`data_channel_is_lifestyle`: Is data channel 'Lifestyle'?
-my_Lifestyle0 <- Lifestyle %>% 
-             filter( data_channel_is_lifestyle == 1)
+#my_Lifestyle0 <- Lifestyle %>% 
+            # filter( data_channel_is_lifestyle == 1)
 
 ```
 
