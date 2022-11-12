@@ -1,4 +1,4 @@
-ST558 Project 3 Group F
+ST558 Project 3
 ================
 Magaritte Nguyen and Matthew Sookoo
 2022-11-12
