@@ -443,6 +443,24 @@ you went through. Discuss the following:</p>
 news popularity data set. You’ll subset the data by data_channel_is_*
 (one of six groups). Then you’ll summarize the data and try to predict
 the number of shares using predictive models.</p>
+<ol style="list-style-type: decimal">
+<li>Read in the OnlineNewsPopularity.csv data file – subset for
+data_channel_is_lifestyle: Is data channel ‘Lifestyle’?</li>
+</ol>
+<p>Here, <code>read_csv()</code> is used to read in the
+OnlineNewsPopularity.csv data and we are subsetting for the
+<code>data_channel_is_lifestyle</code>: Is data channel ‘Lifestyle’?
+variable.</p>
+<pre class="r"><code>#install one time thing
+#install.packages(&quot;caret&quot;)
+
+#read in data set .csv file in full
+Lifestyle &lt;- readr::read_csv(
+             file=&quot;D:/ST558/Project 3/ST558_Project3_GroupF/OnlineNewsPopularity.csv&quot;, 
+             show_col_types = FALSE)</code></pre>
+<pre class="r"><code>#subsetting the data for`data_channel_is_lifestyle`: Is data channel &#39;Lifestyle&#39;?
+my_Lifestyle0 &lt;- Lifestyle %&gt;% 
+             filter( data_channel_is_lifestyle == 1)</code></pre>
 </div>
 <div id="report" class="section level1">
 <h1>Report</h1>
@@ -566,6 +584,7 @@ points on the project.
 • You should use Good Programming Practices when coding (see wolfware). If you do not follow GPP you can lose up to 40 points on the project.  
 • You should use appropriate markdown options/formatting (you can lose up to 20 points) for not doing so.
 -->
+<!-- code needed to render pdf file  -->
 </div>
 
 

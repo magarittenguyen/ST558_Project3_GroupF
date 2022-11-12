@@ -100,6 +100,29 @@ popularity data set. You’ll subset the data by data_channel_is\_\* (one
 of six groups). Then you’ll summarize the data and try to predict the
 number of shares using predictive models.
 
+1.  Read in the OnlineNewsPopularity.csv data file – subset for
+    data_channel_is_lifestyle: Is data channel ‘Lifestyle’?
+
+Here, `read_csv()` is used to read in the OnlineNewsPopularity.csv data
+and we are subsetting for the `data_channel_is_lifestyle`: Is data
+channel ‘Lifestyle’? variable.
+
+``` r
+#install one time thing
+#install.packages("caret")
+
+#read in data set .csv file in full
+Lifestyle <- readr::read_csv(
+             file="D:/ST558/Project 3/ST558_Project3_GroupF/OnlineNewsPopularity.csv", 
+             show_col_types = FALSE)
+```
+
+``` r
+#subsetting the data for`data_channel_is_lifestyle`: Is data channel 'Lifestyle'?
+my_Lifestyle0 <- Lifestyle %>% 
+             filter( data_channel_is_lifestyle == 1)
+```
+
 # Report
 
 Recommendation: At first, consider just using data from a single

@@ -46,8 +46,28 @@ Once you’ve completed the project each of you should write a brief blog post o
 - what are your big take-aways from this project?  
 
 # Topic
-What are you actually doing? You’ll read in and analyze an online news popularity data set. You’ll subset
-the data by data_channel_is_* (one of six groups). Then you’ll summarize the data and try to predict the number of shares using predictive models.
+What are you actually doing? You’ll read in and analyze an online news popularity data set. You’ll subset the data by data_channel_is_* (one of six groups). Then you’ll summarize the data and try to predict the number of shares using predictive models.
+
+1. Read in the OnlineNewsPopularity.csv data file -- subset for data_channel_is_lifestyle: Is data channel 'Lifestyle'?
+
+Here, `read_csv()` is used to read in the OnlineNewsPopularity.csv data and we are subsetting for the `data_channel_is_lifestyle`: Is data channel 'Lifestyle'? variable. 
+``` {r, echo=TRUE, eval=TRUE}
+#install one time thing
+#install.packages("caret")
+
+#read in data set .csv file in full
+Lifestyle <- readr::read_csv(
+             file="D:/ST558/Project 3/ST558_Project3_GroupF/OnlineNewsPopularity.csv", 
+             show_col_types = FALSE)
+```
+
+
+``` {r, echo=TRUE, eval=TRUE}
+#subsetting the data for`data_channel_is_lifestyle`: Is data channel 'Lifestyle'?
+my_Lifestyle0 <- Lifestyle %>% 
+             filter( data_channel_is_lifestyle == 1)
+
+```
 
 # Report
 Recommendation: At first, consider just using data from a single data_channel_is_* source. Once you have all of the below steps done for that data, then you can automate it to work with any chosen data channel. Note: It may be easier to create a single variable representing the data channel when automating the subsetting (although there are many ways to do this).  
@@ -132,10 +152,18 @@ points on the project.
 ```{r, echo=FALSE, eval=FALSE}
 #this code need to be copied and ran in the console to print out results
 #otherwise running from within the program doesn't print out every result
-#e.g. combo object and the fina proportions tibble
+#e.g. combo object and the final proportions tibble
 
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
                    output_file = "README.md",
                    output_options = list(html_preview = FALSE, keep_html = FALSE, toc = TRUE, toc_depth = "6", df_print = "tibble"))
+
+#directions
+ # - save 
+ # - knit file via button
+ # - render in the console with code above
+ # - click files 3-4 in the Git tab
+ # - commit w/ comment button
+ # - push .rmd file
 ```
