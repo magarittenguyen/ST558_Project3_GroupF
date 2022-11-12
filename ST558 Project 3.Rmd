@@ -1,19 +1,42 @@
 ---
-title: "ST558 Project 3"
+title: "ST558 Project 3 Group F"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
 ---
+
+<!-- 
+############################################################# 
+#############################################################
+### Project 3 Group F
+############################################################# 
+############################################################# 
+-->
+
+<!-- setup -->
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-#set seed for simulation reproducibility 
 
+#set seed for simulation reproducibility 
 set.seed(123)
 ```
 
 # Introduction
 
-Our goal with this project is to create predictive models and automating Markdown reports. This dataset summarizes a heterogeneous set of features about articles published by Mashable (www.mashable.com) in a period of two years. We will summarize the data and try to predict the number of shares using linear regression, Random forest and boosting (will add more later)
+Our goal with this project is to create predictive models and automating Markdown reports. This dataset summarizes a heterogeneous set of features about articles published by Mashable (www.mashable.com) over a period of two years. We will summarize the data and try to predict the number of shares using linear regression, Random forest and boosting (will add more later)
 
+- briefly describes the data and the variables you have to work with (just discuss the ones you want to use). 
+- Your target variables is the shares variable.
+- mention the purpose of your analysis and the methods you’ll use to model the response.
+
+- You’ll describe those in more detail later.
+
+Data Set Information:
+
+* The articles were published by Mashable (www.mashable.com) and their content as the rights to reproduce it belongs to them. Hence, this dataset does not share the original content but some statistics associated with it. The original content be publicly accessed and retrieved using the provided urls.
+
+* Acquisition date: January 8, 2015
+
+* The estimated relative performance values were estimated by the authors using a Random Forest classifier and a rolling windows as assessment method. See their article for more details on how the relative performance values were set.
 
 
 # Required Packages
@@ -23,9 +46,9 @@ To use the functions for interacting with the API, the following packages are us
 * `tidyverse`: Tons of useful features for data manipulation and visualization!
 * `caret`: Used for predictive modelling.
 
-MORE ADDED LATER AS REQUIRED
+MORE ADDED LATER AS REQUIRED...
 
-
+<!-- packages that we are calling via library() function -->
 ```{r libraries, include = FALSE}
 library(tidyverse)
 library(caret)
@@ -34,31 +57,93 @@ library(caret)
 # Data
 
 Firstly, we read in the data using `read_csv()`
-```{r}
-rawdata1<-read_csv("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\OnlineNewsPopularity.csv")
+```{r, echo=TRUE, eval=TRUE}
+#check working directory
+getwd()
+#reassign working directory
+#Magaritte's directory
+setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
+#Matthew's directory
+#setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
 
-rawdata1
+#read in data set .csv file in full
+#make sure that this is a relative path used...
+OnlineNewsPopularity<-read_csv("OnlineNewsPopularity.csv", show_col_types = FALSE)
+
+#call object OnlineNewsPopularity - our full raw data
+OnlineNewsPopularity
 
 ```
 
-we now subset the data for the channel of interest lifestyle
+We now subset the data for the channel of interest lifestyle
 
-```{r}
-lifestyle1 <- rawdata1 %>% 
-            filter(data_channel_is_lifestyle == 1)
+```{r, echo=TRUE, eval=TRUE}
+#subsetting the OnlineNewsPopularity full raw data for the data chennel of interest -- Lifestyle
+Lifestyle <- OnlineNewsPopularity %>% 
+               filter(data_channel_is_lifestyle == 1)
+# %>%  select ( share, var1, var2, var3, ... )
+# ! = remove vars -- example below
+#select ( ! c(var1, var2, var3, ... ) ) used to remove variables if needed
 
-lifestyle1
-
-
+#calling the Lifestyle object to view
+Lifestyle
 ```
 
 
 # Summarizations
 
+Now split the data set we’ve created into a training and testing set. Use p = 0.8. 
+
+Here, we are splitting our created data, Lifestyle,  into a training and test set with p=0.8. These datasets will be called `LifestyleTrain` and `LifestyleTest`.
+
+Note: a seed was set for reproduciblility purposes.
+
+``` {r, echo=TRUE, eval=TRUE}
+#seed is set for reproducability 
+set.seed(123)
+
+#another way to split train and test data below
+# #indices to split on
+# train <- sample(1:nrow(my_heart), size = nrow(my_heart)*0.80)
+# test <- dplyr::setdiff(1:nrow(my_heart), train)
+# #subset
+# heartTrain <- my_heart[train, ]
+# heartTest <- my_heart[test, ]
+
+#indices to split on
+LifestyleIndex <- createDataPartition(Lifestyle$shares, p = 0.80, list = FALSE)
+#subset
+LifestyleTrain <- Lifestyle[ LifestyleIndex, ]
+LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
+
+```
 
 
-```{r}
-ggplot(data=lifestyle1, aes(y=shares, x=rate_positive_words)) + geom_point()
+
+```{r, echo=TRUE, eval=TRUE}
+#what question are we trying to answer here? 
+#response variable is shares, but what does that mean given certain variables available to us?
+#maybe look at days of the week variables?
+#figure out what kind of object we want to make to answer our question...
+#tibble keeping what kind of vars, matrix?
+
+#need to do some sort of type of EDA in order to see if variables are highly correlated
+#here we need to summary statistics via summary() and plots
+
+#this shows the summary stats for each variable in our dataset...
+Lifestlye_sumstats_Train <- summary(LifestyleTrain)
+#calling Lifestlye_sumstats_Train object to see our summary stats
+Lifestlye_sumstats_Train
+#check structure of objects
+str(LifestyleTrain)
+str(Lifestlye_sumstats_Train)
+
+#plots include - scatter plots, correlation plots -- plots for continuous data...
+#do we need bar plots?
+
+#A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
+ggplot(data=LifestyleTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
+
 ```
 
 
@@ -68,8 +153,8 @@ ggplot(data=lifestyle1, aes(y=shares, x=rate_positive_words)) + geom_point()
 
 
 
-# Project Objectives
-This is a group project (see the project 3 page for your group member) that involves creating predictive models and automating Markdown reports. Once you’ve completed the project you will also create a blogpost in your blog repo that links to your analyses.
+<!-- # Project Objectives -->
+<!-- This is a group project (see the project 3 page for your group member) that involves creating predictive models and automating Markdown reports. Once you’ve completed the project you will also create a blogpost in your blog repo that links to your analyses. -->
 
 # Project Work
 The first step is for the first group member to create a github repo and add the second group member as a collaborator. The second group member then needs to accept the membership. This gives everyone access to push changes up to the repository. All project work should be done within this repo.
@@ -105,16 +190,15 @@ Here, `read_csv()` is used to read in the OnlineNewsPopularity.csv data and we a
 #install.packages("caret")
 
 #read in data set .csv file in full
-#Lifestyle <- readr::read_csv(
-            # file="D:/ST558/Project 3/ST558_Project3_GroupF/OnlineNewsPopularity.csv", 
-           #  show_col_types = FALSE)
+#OnlineNewsPopularity <- readr::read_csv(file="OnlineNewsPopularity.csv", 
+#                                        show_col_types = FALSE)
 ```
 
 
 ``` {r, echo=TRUE, eval=TRUE}
 #subsetting the data for`data_channel_is_lifestyle`: Is data channel 'Lifestyle'?
-#my_Lifestyle0 <- Lifestyle %>% 
-            # filter( data_channel_is_lifestyle == 1)
+#Lifestyle <- OnlineNewsPopularity %>% 
+#              filter( data_channel_is_lifestyle == 1)
 
 ```
 
@@ -123,17 +207,17 @@ Recommendation: At first, consider just using data from a single data_channel_is
 
 - All code chunks should be shown unless they are setup code chunks.  
 
-# Introduction section
-You should have an introduction section that briefly describes the data and the variables you have to work with (just discuss the ones you want to use). Your target variables is the shares variable.
+<!-- # Introduction section -->
+<!-- You should have an introduction section that briefly describes the data and the variables you have to work with (just discuss the ones you want to use). Your target variables is the shares variable. -->
 
-You should also mention the purpose of your analysis and the methods you’ll use to model the response. You’ll describe those in more detail later.
+<!-- You should also mention the purpose of your analysis and the methods you’ll use to model the response. You’ll describe those in more detail later. -->
 
-# This section should be done by the ‘second’ group member.
+<!-- **This section should be done by the ‘second’ group member.** -->
 
-# Data
-Use a relative path to import the data. Subset the data to work on the data channel of interest.
+<!-- # Data -->
+<!-- Use a relative path to import the data. Subset the data to work on the data channel of interest. -->
 
-# This section should be done by whoever can get to it first.
+<!-- **This section should be done by whoever can get to it first.** -->
 
 # Summarizations
 You should produce some basic (but meaningful) summary statistics and plots about the training data you are working with (especially as it relates to your response).
@@ -172,8 +256,8 @@ part.
 # Submission
 In the project submission, you should simply put a link to your blog post (which will have a link to your github pages and github repo).
 
-# Group Issues
-Please notify me ASAP of any group member issues. You should look over your partner’s work/explanations and discuss that with them if you have any issues with what they’ve done. Both group members are graded on all the work done regardless of who was assigned to do it.
+<!-- # Group Issues -->
+<!-- Please notify me ASAP of any group member issues. You should look over your partner’s work/explanations and discuss that with them if you have any issues with what they’ve done. Both group members are graded on all the work done regardless of who was assigned to do it. -->
 
 <!--
 Rubric for Grading (total = 100 points)
