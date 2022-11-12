@@ -1,15 +1,19 @@
 ---
-title: "ST558 Project 3"
-author: "Magaritte Nguyen and Matthew Sookoo"
-date: "2022-11-12"
+title: "Project 3 Group F"
+author: "Magaritte Nguyen & MaMatthew Sookoo"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: github_document
+params:
+  #api-key: "a2ac9584c657495ab1447aeef32b97d3"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-# Introduction
-
+<!-- 
+############################################################# 
+#############################################################
+Project 3 - Group F
+############################################################# 
+############################################################# 
+-->
 
 # Project Objectives
 This is a group project (see the project 3 page for your group member) that involves creating predictive models and automating Markdown reports. Once you’ve completed the project you will also create a blogpost in your blog repo that links to your analyses.
