@@ -13,9 +13,8 @@ Magaritte Nguyen and Matthew Sookoo
         model.</a>
     -   <a href="#second-linear-model" id="toc-second-linear-model">Second
         linear model</a>
-    -   <a href="#random-forest-models-used-days"
-        id="toc-random-forest-models-used-days">Random forest models. used
-        days</a>
+    -   <a href="#random-forest-model" id="toc-random-forest-model">Random
+        forest model</a>
     -   <a href="#and-the-boosted-tree-model-number-of-images-etc"
         id="toc-and-the-boosted-tree-model-number-of-images-etc">and the boosted
         tree model Number of images etc</a>
@@ -181,8 +180,8 @@ Lifestyle
 and testing set. Use p = 0.7.
 
 Here, we are splitting our created data, Lifestyle, into a training and
-test set with p=0.7. These datasets will be called `LifestyleTrain` and
-`LifestyleTest`.
+test set with p = 0.7. These datasets will be called `LifestyleTrain`
+and `LifestyleTest`.
 
 Note: a seed was set for reproduciblility purposes.
 
@@ -395,19 +394,16 @@ ggplot(data=LifestyleTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
 # Modelling
 
 The data is already split into 70% training and 30% test. Our main goal
-is to predict the number of shares. We will create four models each
-using 5-fold cross-validation.
-
-We begin by creating two multiple linear regression models.
+is to predict the number of shares. This will be our response variable.
+We will create four models each using 5-fold cross-validation. Two
+models will be multiple linear regression models, one will be a random
+forest model and the final model will be a boosted tree model
 
 A Linear regression model is a supervised learning technique that is
 used to predict the value of a variable based on the value of other
 variable(s). The variable you want to predict is called the dependent
 variable or the response. The variable(s) you are using to predict is
 called the independent variable(s) or the predictor(s).
-
-In both linear models we are using the number of shares as our response
-variable.
 
 ## First linear model.
 
@@ -460,7 +456,12 @@ postResample(test_pred_l_m2, LifestyleTest$shares)
     ##         RMSE     Rsquared          MAE 
     ## 9.091598e+03 1.022937e-03 3.180520e+03
 
-## Random forest models. used days
+## Random forest model
+
+As stated in the the first linear regression model we will model the
+number of shares by “weekday_is_thursday” (Was the article published on
+a Thursday?), “weekday_is_friday” (Was the article published on a
+Friday?) and “is_weekend” (Was the article published on the weekend?).
 
 ``` r
 r_f <- train(shares ~ weekday_is_thursday +  weekday_is_friday + is_weekend, data = LifestyleTrain, method = "rf",
@@ -957,37 +958,6 @@ postResample(test_pred_boosted, LifestyleTest$shares)
 Next we do a comparison of the four models
 
 The model with the lowest rmse is Random Forest-winner
-
-Now split the data set we’ve created into a training and testing set.
-Use p = 0.8.
-
-Here, we are splitting our created data, Lifestyle, into a training and
-test set with p=0.8. These datasets will be called `LifestyleTrain` and
-`LifestyleTest`.
-
-Note: a seed was set for reproduciblility purposes.
-
-``` r
-#seed is set for reproducability 
-set.seed(123)
-
-#another way to split train and test data below
-# #indices to split on
-# train <- sample(1:nrow(my_heart), size = nrow(my_heart)*0.80)
-# test <- dplyr::setdiff(1:nrow(my_heart), train)
-# #subset
-# heartTrain <- my_heart[train, ]
-# heartTest <- my_heart[test, ]
-
-#indices to split on
-LifestyleIndex <- createDataPartition(Lifestyle$shares, p = 0.80, list = FALSE)
-#subset
-LifestyleTrain <- Lifestyle[ LifestyleIndex, ]
-LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
-```
-
-<!-- # Project Objectives -->
-<!-- This is a group project (see the project 3 page for your group member) that involves creating predictive models and automating Markdown reports. Once you’ve completed the project you will also create a blogpost in your blog repo that links to your analyses. -->
 
 # Project Work
 

@@ -500,7 +500,7 @@ Lifestyle</code></pre>
 <p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD Now split the data set we’ve
 created into a training and testing set. Use p = 0.7.</p>
 <p>Here, we are splitting our created data, Lifestyle, into a training
-and test set with p=0.7. These datasets will be called
+and test set with p = 0.7. These datasets will be called
 <code>LifestyleTrain</code> and <code>LifestyleTest</code>.</p>
 <p>Note: a seed was set for reproduciblility purposes.</p>
 <pre class="r"><code>#seed is set for reproducability 
@@ -708,16 +708,15 @@ ggplot(data=LifestyleTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
 <div id="modelling" class="section level1">
 <h1>Modelling</h1>
 <p>The data is already split into 70% training and 30% test. Our main
-goal is to predict the number of shares. We will create four models each
-using 5-fold cross-validation.</p>
-<p>We begin by creating two multiple linear regression models.</p>
+goal is to predict the number of shares. This will be our response
+variable. We will create four models each using 5-fold cross-validation.
+Two models will be multiple linear regression models, one will be a
+random forest model and the final model will be a boosted tree model</p>
 <p>A Linear regression model is a supervised learning technique that is
 used to predict the value of a variable based on the value of other
 variable(s). The variable you want to predict is called the dependent
 variable or the response. The variable(s) you are using to predict is
 called the independent variable(s) or the predictor(s).</p>
-<p>In both linear models we are using the number of shares as our
-response variable.</p>
 <div id="first-linear-model." class="section level2">
 <h2>First linear model.</h2>
 <p>For the first linear regression model we will model the number of
@@ -760,8 +759,13 @@ postResample(test_pred_l_m2, LifestyleTest$shares)</code></pre>
 <pre><code>##         RMSE     Rsquared          MAE 
 ## 9.091598e+03 1.022937e-03 3.180520e+03</code></pre>
 </div>
-<div id="random-forest-models.-used-days" class="section level2">
-<h2>Random forest models. used days</h2>
+<div id="random-forest-model" class="section level2">
+<h2>Random forest model</h2>
+<p>As stated in the the first linear regression model we will model the
+number of shares by “weekday_is_thursday” (Was the article published on
+a Thursday?), “weekday_is_friday” (Was the article published on a
+Friday?) and “is_weekend” (Was the article published on the
+weekend?).</p>
 <pre class="r"><code>r_f &lt;- train(shares ~ weekday_is_thursday +  weekday_is_friday + is_weekend, data = LifestyleTrain, method = &quot;rf&quot;,
  trControl=trainControl(method = &quot;cv&quot;, number = 5),
  preProcess = c(&quot;center&quot;, &quot;scale&quot;),
@@ -1245,30 +1249,6 @@ postResample(test_pred_boosted, LifestyleTest$shares)</code></pre>
 ## 9.156736e+03 1.572266e-04 3.259582e+03</code></pre>
 <p>Next we do a comparison of the four models</p>
 <p>The model with the lowest rmse is Random Forest-winner</p>
-<p>Now split the data set we’ve created into a training and testing set.
-Use p = 0.8.</p>
-<p>Here, we are splitting our created data, Lifestyle, into a training
-and test set with p=0.8. These datasets will be called
-<code>LifestyleTrain</code> and <code>LifestyleTest</code>.</p>
-<p>Note: a seed was set for reproduciblility purposes.</p>
-<pre class="r"><code>#seed is set for reproducability 
-set.seed(123)
-
-#another way to split train and test data below
-# #indices to split on
-# train &lt;- sample(1:nrow(my_heart), size = nrow(my_heart)*0.80)
-# test &lt;- dplyr::setdiff(1:nrow(my_heart), train)
-# #subset
-# heartTrain &lt;- my_heart[train, ]
-# heartTest &lt;- my_heart[test, ]
-
-#indices to split on
-LifestyleIndex &lt;- createDataPartition(Lifestyle$shares, p = 0.80, list = FALSE)
-#subset
-LifestyleTrain &lt;- Lifestyle[ LifestyleIndex, ]
-LifestyleTest  &lt;- Lifestyle[-LifestyleIndex, ]</code></pre>
-<!-- # Project Objectives -->
-<!-- This is a group project (see the project 3 page for your group member) that involves creating predictive models and automating Markdown reports. Once you’ve completed the project you will also create a blogpost in your blog repo that links to your analyses. -->
 </div>
 </div>
 <div id="project-work" class="section level1">
