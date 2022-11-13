@@ -27,8 +27,6 @@ Magaritte Nguyen and Matthew Sookoo
 ############################################################# 
 -->
 
-testing MN 
-
 <!-- setup -->
 
 # Introduction
