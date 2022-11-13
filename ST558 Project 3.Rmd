@@ -14,6 +14,7 @@ date: "2022-11-12"
 
 <!-- setup -->
 ```{r setup, include = FALSE}
+#global chunk options
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 #set seed for simulation reproducibility 
@@ -22,7 +23,10 @@ set.seed(123)
 
 # Introduction
 
-Our goal with this project is to create predictive models and automating Markdown reports. This dataset summarizes a heterogeneous set of features about articles published by Mashable (www.mashable.com) over a period of two years. We will summarize the data and try to predict the number of shares using linear regression, Random forest and boosting (will add more later)
+Our goal with this project is to create predictive models and automating Markdown reports. This dataset summarizes a heterogeneous set of features about articles published by Mashable (www.mashable.com) in a period of two years. We will summarize the data and try to predict the number of shares using linear regression, Random forest and boosting (will add more later)
+
+This dataset summarizes a heterogeneous set of features about articles published by Mashable in a period of two years. The goal is to predict the number of shares in social networks (popularity).
+	
 
 - briefly describes the data and the variables you have to work with (just discuss the ones you want to use). 
 - Your target variables is the shares variable.
@@ -62,13 +66,14 @@ Firstly, we read in the data using `read_csv()`
 getwd()
 #reassign working directory
 #Magaritte's directory
-setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
+#setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
 #Matthew's directory
 #setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
 
 #read in data set .csv file in full
 #make sure that this is a relative path used...
-OnlineNewsPopularity<-read_csv("OnlineNewsPopularity.csv", show_col_types = FALSE)
+# ./ stays in the same file directory
+OnlineNewsPopularity<-read_csv("./OnlineNewsPopularity.csv", show_col_types = FALSE)
 
 #call object OnlineNewsPopularity - our full raw data
 OnlineNewsPopularity
@@ -78,12 +83,15 @@ OnlineNewsPopularity
 We now subset the data for the channel of interest lifestyle
 
 ```{r, echo=TRUE, eval=TRUE}
-#subsetting the OnlineNewsPopularity full raw data for the data chennel of interest -- Lifestyle
+#subsetting the OnlineNewsPopularity full raw data for the data channel of interest -- Lifestyle
 Lifestyle <- OnlineNewsPopularity %>% 
-               filter(data_channel_is_lifestyle == 1)
-# %>%  select ( share, var1, var2, var3, ... )
-# ! = remove vars -- example below
-#select ( ! c(var1, var2, var3, ... ) ) used to remove variables if needed
+               filter(data_channel_is_lifestyle == 1) %>%
+               # removing non-predictive variables per dataset description
+               # remove all data_channel_is_* variables because we already filtered on them and we do not want them included in the model!
+               select( ! c(url, timedelta, starts_with("data_channel_is_" ) ) )
+
+#tidyverse way of looking at the dataset -- similar to str()
+#glimpse(Lifestyle)
 
 #calling the Lifestyle object to view
 Lifestyle
@@ -91,34 +99,6 @@ Lifestyle
 
 
 # Summarizations
-
-Now split the data set we’ve created into a training and testing set. Use p = 0.8. 
-
-Here, we are splitting our created data, Lifestyle,  into a training and test set with p=0.8. These datasets will be called `LifestyleTrain` and `LifestyleTest`.
-
-Note: a seed was set for reproduciblility purposes.
-
-``` {r, echo=TRUE, eval=TRUE}
-#seed is set for reproducability 
-set.seed(123)
-
-#another way to split train and test data below
-# #indices to split on
-# train <- sample(1:nrow(my_heart), size = nrow(my_heart)*0.80)
-# test <- dplyr::setdiff(1:nrow(my_heart), train)
-# #subset
-# heartTrain <- my_heart[train, ]
-# heartTest <- my_heart[test, ]
-
-#indices to split on
-LifestyleIndex <- createDataPartition(Lifestyle$shares, p = 0.80, list = FALSE)
-#subset
-LifestyleTrain <- Lifestyle[ LifestyleIndex, ]
-LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
-
-```
-
-
 
 ```{r, echo=TRUE, eval=TRUE}
 #what question are we trying to answer here? 
@@ -147,6 +127,31 @@ ggplot(data=LifestyleTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
 ```
 
 
+Now split the data set we’ve created into a training and testing set. Use p = 0.8. 
+
+Here, we are splitting our created data, Lifestyle,  into a training and test set with p=0.8. These datasets will be called `LifestyleTrain` and `LifestyleTest`.
+
+Note: a seed was set for reproduciblility purposes.
+
+``` {r, echo=TRUE, eval=TRUE}
+#seed is set for reproducability 
+set.seed(123)
+
+#another way to split train and test data below
+# #indices to split on
+# train <- sample(1:nrow(my_heart), size = nrow(my_heart)*0.80)
+# test <- dplyr::setdiff(1:nrow(my_heart), train)
+# #subset
+# heartTrain <- my_heart[train, ]
+# heartTest <- my_heart[test, ]
+
+#indices to split on
+LifestyleIndex <- createDataPartition(Lifestyle$shares, p = 0.80, list = FALSE)
+#subset
+LifestyleTrain <- Lifestyle[ LifestyleIndex, ]
+LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
+
+```
 
 
 
@@ -292,11 +297,12 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                    output_file = "README.md",
                    output_options = list(html_preview = FALSE, keep_html = FALSE, toc = TRUE, toc_depth = "6", df_print = "tibble"))
 
-#directions
+#directions - save, commit, push, pull
+
  # - save 
- # - knit file via button
+ # - knit file via button (see the changes made in a url page html)
  # - render in the console with code above
- # - click files 3-4 in the Git tab
+ # - click files 3-4 in the Git tab -- 
  # - commit w/ comment button
  # - push .rmd file 
 ```
