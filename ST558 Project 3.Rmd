@@ -200,16 +200,16 @@ postResample(test_pred_l_m2, LifestyleTest$shares)
 
 ## Random forest model
 
+As stated in the the first linear regression model we will model the number of shares by "weekday_is_thursday" (Was the article published on a Thursday?), "weekday_is_friday" (Was the article published on a Friday?) and "is_weekend" (Was the article published on the weekend?). Therefore the predictors are "weekday_is_thursday", "weekday_is_friday" and "is_weekend".
 
-
-As stated in the the first linear regression model we will model the number of shares by "weekday_is_thursday" (Was the article published on a Thursday?), "weekday_is_friday" (Was the article published on a Friday?) and "is_weekend" (Was the article published on the weekend?).
+The idea behind the random forest model is the same as bagging but we use a random subset of predictors for each bootstrap sample tree fit (indicated by "mtry"). More specifically, it involves creating a boothstrap sample (same size with replacement), training the tree on this sample (no pruning necessary), repeating the process a large number of times and the final prediction is the average of those predictions. Finding the average of predictions decreases variance which improves predictions but unfortunately we lose interpretability.
 
 
 ```{r}
 r_f <- train(shares ~ weekday_is_thursday +  weekday_is_friday + is_weekend, data = LifestyleTrain, method = "rf",
  trControl=trainControl(method = "cv", number = 5),
  preProcess = c("center", "scale"),
- tuneGrid = data.frame(mtry = 1:15))
+ tuneGrid = data.frame(mtry = 1:3))
 
 
 test_pred_r_f <- predict(r_f, newdata = LifestyleTest)
@@ -218,7 +218,13 @@ postResample(test_pred_r_f, LifestyleTest$shares)
 
 ```
 
-## and the boosted tree model Number of images etc
+## Boosted tree model
+
+As stated in the second linear regression model we will model the number of shares by "num_imgs" (Number of images), "num_videos" (Number of videos) and "num_hrefs" (Number of links). 
+
+The idea behind the boosting tree model is to train our tree slowly in a sequential manner so each tree that is created will be based on the previous one with predictions updated. 
+
+will explain tuneGrid later
 
 
 ```{r}
