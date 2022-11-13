@@ -4,11 +4,13 @@ Magaritte Nguyen and Matthew Sookoo
 2022-11-12
 
 -   <a href="#introduction" id="toc-introduction">Introduction</a>
-    -   <a href="#response-variable" id="toc-response-variable">Response
-        variable</a>
-    -   <a href="#independent-or-predictor-variables"
-        id="toc-independent-or-predictor-variables">Independent or predictor
-        variables</a>
+    -   <a href="#more-about-the-variables"
+        id="toc-more-about-the-variables">More about the variables</a>
+        -   <a href="#response-variable" id="toc-response-variable">Response
+            variable</a>
+        -   <a href="#independent-or-predictor-variables"
+            id="toc-independent-or-predictor-variables">Independent or predictor
+            variables</a>
 -   <a href="#required-packages" id="toc-required-packages">Required
     Packages</a>
 -   <a href="#data" id="toc-data">Data</a>
@@ -41,19 +43,29 @@ Magaritte Nguyen and Matthew Sookoo
 # Introduction
 
 Our goal with this project is to create predictive models and automating
-Markdown reports. This dataset summarizes a heterogeneous set of
-features about articles published by [Mashable](http.//www.mashable.com)
-in a period of two years. We will summarize the data and try to predict
-the number of shares using linear regression, Random forest and
-boosting.
+Markdown reports.
 
-The data contains 61 variables. We only mention the one we use.
+We are using this [Online News Popularity Data
+Set](https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity).
 
-## Response variable
+This dataset summarizes a heterogeneous set of features about articles
+published by [Mashable](http://www.mashable.com) in a period of two
+years.
+
+We will summarize the data and try to predict the number of shares using
+linear regression, Random forest and boosting.
+
+## More about the variables
+
+The data contains 61 variables and we are interested in the number of
+shares of the online news. We only mention the one we use in our
+project.
+
+### Response variable
 
 -   “shares” (Number of shares (target))
 
-## Independent or predictor variables
+### Independent or predictor variables
 
 -   “data_channel_is\_\*” (Lifestyle, Entertainment, Business, Social
     Media, Tech, World)

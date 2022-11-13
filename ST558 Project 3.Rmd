@@ -18,17 +18,25 @@ set.seed(123)
 
 # Introduction 
 
-Our goal with this project is to create predictive models and automating Markdown reports. This dataset summarizes a heterogeneous set of features about articles published by [Mashable](http.//www.mashable.com) in a period of two years. We will summarize the data and try to predict the number of shares using linear regression, Random forest and boosting.
+Our goal with this project is to create predictive models and automating Markdown reports. 
 
-The data contains 61 variables. We only mention the one we use.
+We are using this [Online News Popularity Data Set](https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity).
 
-## Response variable 
+This dataset summarizes a heterogeneous set of features about articles published by [Mashable](http://www.mashable.com) in a period of two years. 
+
+We will summarize the data and try to predict the number of shares using linear regression, Random forest and boosting.
+
+## More about the variables
+
+The data contains 61 variables and we are interested in the number of shares of the online news. We only mention the one we use in our project.
+
+### Response variable 
 
 * "shares" (Number of shares (target))
 
 
 
-## Independent or predictor variables
+### Independent or predictor variables
 
 * "data_channel_is_*" (Lifestyle, Entertainment, Business, Social Media, Tech, World)
 

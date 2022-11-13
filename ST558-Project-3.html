@@ -374,19 +374,27 @@ pre code {
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>Our goal with this project is to create predictive models and
-automating Markdown reports. This dataset summarizes a heterogeneous set
-of features about articles published by <a href="http.//www.mashable.com">Mashable</a> in a period of two years. We
-will summarize the data and try to predict the number of shares using
-linear regression, Random forest and boosting.</p>
-<p>The data contains 61 variables. We only mention the one we use.</p>
-<div id="response-variable" class="section level2">
-<h2>Response variable</h2>
+automating Markdown reports.</p>
+<p>We are using this <a href="https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity">Online
+News Popularity Data Set</a>.</p>
+<p>This dataset summarizes a heterogeneous set of features about
+articles published by <a href="http://www.mashable.com">Mashable</a> in
+a period of two years.</p>
+<p>We will summarize the data and try to predict the number of shares
+using linear regression, Random forest and boosting.</p>
+<div id="more-about-the-variables" class="section level2">
+<h2>More about the variables</h2>
+<p>The data contains 61 variables and we are interested in the number of
+shares of the online news. We only mention the one we use in our
+project.</p>
+<div id="response-variable" class="section level3">
+<h3>Response variable</h3>
 <ul>
 <li>“shares” (Number of shares (target))</li>
 </ul>
 </div>
-<div id="independent-or-predictor-variables" class="section level2">
-<h2>Independent or predictor variables</h2>
+<div id="independent-or-predictor-variables" class="section level3">
+<h3>Independent or predictor variables</h3>
 <ul>
 <li><p>“data_channel_is_*” (Lifestyle, Entertainment, Business, Social
 Media, Tech, World)</p></li>
@@ -409,6 +417,7 @@ Friday?)</p></li>
 <li><p>“self_reference_avg_sharess” (Avg. shares of referenced articles
 in Mashable)</p></li>
 </ul>
+</div>
 </div>
 </div>
 <div id="required-packages" class="section level1">
