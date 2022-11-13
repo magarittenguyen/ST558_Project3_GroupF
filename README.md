@@ -4,9 +4,16 @@ Magaritte Nguyen and Matthew Sookoo
 2022-11-12
 
 -   <a href="#introduction" id="toc-introduction">Introduction</a>
+    -   <a href="#response-variable" id="toc-response-variable">Response
+        variable</a>
+    -   <a href="#independent-or-predictor-variables"
+        id="toc-independent-or-predictor-variables">Independent or predictor
+        variables</a>
 -   <a href="#required-packages" id="toc-required-packages">Required
     Packages</a>
 -   <a href="#data" id="toc-data">Data</a>
+    -   <a href="#reading-in-the-data" id="toc-reading-in-the-data">Reading in
+        the data</a>
 -   <a href="#summarizations" id="toc-summarizations">Summarizations</a>
 -   <a href="#modelling" id="toc-modelling">Modelling</a>
     -   <a href="#first-linear-model" id="toc-first-linear-model">First linear
@@ -29,66 +36,67 @@ Magaritte Nguyen and Matthew Sookoo
 -   <a href="#automation" id="toc-automation">Automation</a>
 -   <a href="#submission" id="toc-submission">Submission</a>
 
-<!-- 
-############################################################# 
-#############################################################
-### Project 3 Group F
-############################################################# 
-############################################################# 
--->
 <!-- setup -->
 
 # Introduction
 
 Our goal with this project is to create predictive models and automating
 Markdown reports. This dataset summarizes a heterogeneous set of
-features about articles published by Mashable (www.mashable.com) in a
-period of two years. We will summarize the data and try to predict the
-number of shares using linear regression, Random forest and boosting
-(will add more later)
+features about articles published by [Mashable](http.//www.mashable.com)
+in a period of two years. We will summarize the data and try to predict
+the number of shares using linear regression, Random forest and
+boosting.
 
-This dataset summarizes a heterogeneous set of features about articles
-published by Mashable in a period of two years. The goal is to predict
-the number of shares in social networks (popularity).
+The data contains 61 variables. We only mention the one we use.
 
--   briefly describes the data and the variables you have to work with
-    (just discuss the ones you want to use).
+## Response variable
 
--   Your target variables is the shares variable.
+-   “shares” (Number of shares (target))
 
--   mention the purpose of your analysis and the methods you’ll use to
-    model the response.
+## Independent or predictor variables
 
--   You’ll describe those in more detail later.
+-   “data_channel_is\_\*” (Lifestyle, Entertainment, Business, Social
+    Media, Tech, World)
 
-Data Set Information:
+-   “n_tokens_title” (Number of words in the title),
 
--   The articles were published by Mashable (www.mashable.com) and their
-    content as the rights to reproduce it belongs to them. Hence, this
-    dataset does not share the original content but some statistics
-    associated with it. The original content be publicly accessed and
-    retrieved using the provided urls.
+-   “n_tokens_content” (Number of words in the content)
 
--   Acquisition date: January 8, 2015
+-   “num_imgs” (Number of images)
 
--   The estimated relative performance values were estimated by the
-    authors using a Random Forest classifier and a rolling windows as
-    assessment method. See their article for more details on how the
-    relative performance values were set.
+-   “num_videos” (Number of videos)
+
+-   “is_weekend” (Was the article published on the weekend?)
+
+-   “num_hrefs” (Number of links)
+
+-   “weekday_is_monday” (Was the article published on a Monday?)
+
+-   “weekday_is_tuesday” (Was the article published on a Tuesday?)
+
+-   “weekday_is_wednesday” {Was the article published on a Wednesday?)
+
+-   “weekday_is_thursday” (Was the article published on a Thursday?)
+
+-   “weekday_is_friday” (Was the article published on a Friday?)
+
+-   “self_reference_avg_sharess” (Avg. shares of referenced articles in
+    Mashable)
 
 # Required Packages
 
 The following packages are used:
 
--   `tidyverse`: Tons of useful features for data manipulation and
-    visualization!
--   `caret`: Used for predictive modelling.
+-   `tidyverse`
+-   `caret`
+-   `shiny`
+-   `rmarkdown`
 
 MORE ADDED LATER AS REQUIRED…
 
-<!-- packages that we are calling via library() function -->
-
 # Data
+
+## Reading in the data
 
 Firstly, we read in the data using `read_csv()`
 
@@ -176,8 +184,8 @@ Lifestyle
 
 # Summarizations
 
-\<\<\<\<\<\<\< HEAD Now split the data set we’ve created into a training
-and testing set. Use p = 0.7.
+Now split the data set we’ve created into a training and testing set.
+Use p = 0.7.
 
 Here, we are splitting our created data, Lifestyle, into a training and
 test set with p = 0.7. These datasets will be called `LifestyleTrain`

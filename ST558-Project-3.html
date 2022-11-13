@@ -370,60 +370,62 @@ pre code {
 </div>
 
 
-<!-- 
-############################################################# 
-#############################################################
-### Project 3 Group F
-############################################################# 
-############################################################# 
--->
 <!-- setup -->
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>Our goal with this project is to create predictive models and
 automating Markdown reports. This dataset summarizes a heterogeneous set
-of features about articles published by Mashable (www.mashable.com) in a
-period of two years. We will summarize the data and try to predict the
-number of shares using linear regression, Random forest and boosting
-(will add more later)</p>
-<p>This dataset summarizes a heterogeneous set of features about
-articles published by Mashable in a period of two years. The goal is to
-predict the number of shares in social networks (popularity).</p>
+of features about articles published by <a href="http.//www.mashable.com">Mashable</a> in a period of two years. We
+will summarize the data and try to predict the number of shares using
+linear regression, Random forest and boosting.</p>
+<p>The data contains 61 variables. We only mention the one we use.</p>
+<div id="response-variable" class="section level2">
+<h2>Response variable</h2>
 <ul>
-<li><p>briefly describes the data and the variables you have to work
-with (just discuss the ones you want to use).</p></li>
-<li><p>Your target variables is the shares variable.</p></li>
-<li><p>mention the purpose of your analysis and the methods you’ll use
-to model the response.</p></li>
-<li><p>You’ll describe those in more detail later.</p></li>
+<li>“shares” (Number of shares (target))</li>
 </ul>
-<p>Data Set Information:</p>
+</div>
+<div id="independent-or-predictor-variables" class="section level2">
+<h2>Independent or predictor variables</h2>
 <ul>
-<li><p>The articles were published by Mashable (www.mashable.com) and
-their content as the rights to reproduce it belongs to them. Hence, this
-dataset does not share the original content but some statistics
-associated with it. The original content be publicly accessed and
-retrieved using the provided urls.</p></li>
-<li><p>Acquisition date: January 8, 2015</p></li>
-<li><p>The estimated relative performance values were estimated by the
-authors using a Random Forest classifier and a rolling windows as
-assessment method. See their article for more details on how the
-relative performance values were set.</p></li>
+<li><p>“data_channel_is_*” (Lifestyle, Entertainment, Business, Social
+Media, Tech, World)</p></li>
+<li><p>“n_tokens_title” (Number of words in the title),</p></li>
+<li><p>“n_tokens_content” (Number of words in the content)</p></li>
+<li><p>“num_imgs” (Number of images)</p></li>
+<li><p>“num_videos” (Number of videos)</p></li>
+<li><p>“is_weekend” (Was the article published on the weekend?)</p></li>
+<li><p>“num_hrefs” (Number of links)</p></li>
+<li><p>“weekday_is_monday” (Was the article published on a
+Monday?)</p></li>
+<li><p>“weekday_is_tuesday” (Was the article published on a
+Tuesday?)</p></li>
+<li><p>“weekday_is_wednesday” {Was the article published on a
+Wednesday?)</p></li>
+<li><p>“weekday_is_thursday” (Was the article published on a
+Thursday?)</p></li>
+<li><p>“weekday_is_friday” (Was the article published on a
+Friday?)</p></li>
+<li><p>“self_reference_avg_sharess” (Avg. shares of referenced articles
+in Mashable)</p></li>
 </ul>
+</div>
 </div>
 <div id="required-packages" class="section level1">
 <h1>Required Packages</h1>
 <p>The following packages are used:</p>
 <ul>
-<li><code>tidyverse</code>: Tons of useful features for data
-manipulation and visualization!</li>
-<li><code>caret</code>: Used for predictive modelling.</li>
+<li><code>tidyverse</code></li>
+<li><code>caret</code></li>
+<li><code>shiny</code></li>
+<li><code>rmarkdown</code></li>
 </ul>
 <p>MORE ADDED LATER AS REQUIRED…</p>
-<!-- packages that we are calling via library() function -->
 </div>
 <div id="data" class="section level1">
 <h1>Data</h1>
+<div id="reading-in-the-data" class="section level2">
+<h2>Reading in the data</h2>
 <p>Firstly, we read in the data using <code>read_csv()</code></p>
 <pre class="r"><code>#check working directory
 getwd()</code></pre>
@@ -495,10 +497,11 @@ Lifestyle</code></pre>
 ## #   weekday_is_monday &lt;dbl&gt;, weekday_is_tuesday &lt;dbl&gt;,
 ## #   weekday_is_wednesday &lt;dbl&gt;, weekday_is_thursday &lt;dbl&gt;, …</code></pre>
 </div>
+</div>
 <div id="summarizations" class="section level1">
 <h1>Summarizations</h1>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD Now split the data set we’ve
-created into a training and testing set. Use p = 0.7.</p>
+<p>Now split the data set we’ve created into a training and testing set.
+Use p = 0.7.</p>
 <p>Here, we are splitting our created data, Lifestyle, into a training
 and test set with p = 0.7. These datasets will be called
 <code>LifestyleTrain</code> and <code>LifestyleTest</code>.</p>
