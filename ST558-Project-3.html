@@ -714,32 +714,6 @@ cross-validation.</p>
 <p>Two models (first linear and random forest) will be multiple linear
 regression models, one will be a random forest model and the final model
 will be a boosted tree model.</p>
-<p>Two models below will use the following as the independent
-variables</p>
-<ul>
-<li><p>“n_tokens_title” (Number of words in the title),</p></li>
-<li><p>“n_tokens_content” (Number of words in the content)</p></li>
-<li><p>“num_imgs” (Number of images)</p></li>
-<li><p>“num_videos” (Number of videos)</p></li>
-<li><p>“is_weekend” (Was the article published on the weekend?)</p></li>
-</ul>
-<p>The final two models (second linear and boosting) will use the
-following as the independent variables</p>
-<ul>
-<li><p>“num_hrefs” (Number of links)</p></li>
-<li><p>“weekday_is_monday” (Was the article published on a
-Monday?)</p></li>
-<li><p>“weekday_is_tuesday” (Was the article published on a
-Tuesday?)</p></li>
-<li><p>“weekday_is_wednesday” {Was the article published on a
-Wednesday?)</p></li>
-<li><p>“weekday_is_thursday” (Was the article published on a
-Thursday?)</p></li>
-<li><p>“weekday_is_friday” (Was the article published on a
-Friday?)</p></li>
-<li><p>“self_reference_avg_sharess” (Avg. shares of referenced articles
-in Mashable)</p></li>
-</ul>
 <p>A Linear regression model is a supervised learning technique that is
 used to predict the value of a variable based on the value of other
 variable(s). The variable you want to predict is called the dependent
@@ -852,9 +826,9 @@ Friday?)</p></li>
 <li><p>“self_reference_avg_sharess” (Avg. shares of referenced articles
 in Mashable)</p></li>
 </ul>
-<p>In our model we use all combination of the tuning parameters n.trees
-= c(25, 50, 100, 150, 200), interaction.depth = 1:4, shrinkage = 0.1 and
-n.minobsinnode = 10).</p>
+<p>Additionally we choose to use all combinations of the tuning
+parameters n.trees = c(25, 50, 100, 150, 200), interaction.depth = 1:4,
+shrinkage = 0.1 and n.minobsinnode = 10.</p>
 <pre class="r"><code>tune1&lt;- c(25, 50, 100, 150, 200)
 tune2&lt;- 1:4
 tune3&lt;- 0.1
