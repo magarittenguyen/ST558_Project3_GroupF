@@ -3,7 +3,7 @@ title: "ST558 Project 3 Group F"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
 params:
-  team: "data_channel_is_lifestyle"
+   team: "data_channel_is_lifestyle"
 ---
 
 <!-- setup -->
@@ -117,10 +117,10 @@ We now subset the data for the channel of interest lifestyle
 ```{r, echo=TRUE, eval=TRUE}
 #subsetting the OnlineNewsPopularity full raw data for the data channel of interest -- Lifestyle
 Lifestyle <- OnlineNewsPopularity %>% 
-               filter(data_channel_is_lifestyle == 1) %>%
+               filter(data_channel_is_lifestyle == 1) 
                # removing non-predictive variables per dataset description
                # remove all data_channel_is_* variables because we already filtered on them and we do not want them included in the model!
-               select( ! c(url, timedelta, starts_with("data_channel_is_" ) ) )
+              # select( ! c(url, timedelta, starts_with("data_channel_is_" ) ) )
 
 #tidyverse way of looking at the dataset -- similar to str()
 #glimpse(Lifestyle)
