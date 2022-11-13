@@ -129,8 +129,7 @@ LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
 
 
 
-=======
->>>>>>> a786121c8d8ef85dd627a4ddfbe61d38644bc50c
+
 ```{r, echo=TRUE, eval=TRUE}
 #what question are we trying to answer here? 
 #response variable is shares, but what does that mean given certain variables available to us?
