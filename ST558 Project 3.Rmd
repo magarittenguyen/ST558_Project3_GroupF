@@ -158,55 +158,121 @@ ggplot(data=LifestyleTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
 
 # Modelling
 
-The data is already split into 70% training and 30% test. Our main goal is to predict the number of shares. This will be our response variable. We will create four models each using 5-fold cross-validation. Two models will be multiple linear regression models, one will be a random forest model and the final model will be a boosted tree model
+The data is already split into 70% training and 30% test. Our main goal is to predict the number of shares. This will be our response variable. We will create four models each using 5-fold cross-validation. 
+
+Two models (first linear and random forest) will be multiple linear regression models, one will be a random forest model and the final model will be a boosted tree model. 
+
+Two models below will use the following as the independent variables
+
+* "n_tokens_title" (Number of words in the title),
+
+* "n_tokens_content" (Number of words in the content)
+
+* "num_imgs" (Number of images)
+
+* "num_videos" (Number of videos)
+
+* "is_weekend" (Was the article published on the weekend?)
+
+The final two models (second linear and boosting) will use the following as the independent variables
+
+* "num_hrefs" (Number of links)
+
+* "weekday_is_monday" (Was the article published on a Monday?)
+
+* "weekday_is_tuesday" (Was the article published on a Tuesday?)
+
+* "weekday_is_wednesday" {Was the article published on a Wednesday?)
+
+* "weekday_is_thursday" (Was the article published on a Thursday?)
+
+* "weekday_is_friday" (Was the article published on a Friday?)
+
+* "self_reference_avg_sharess" (Avg. shares of referenced articles in Mashable)
 
 
 A Linear regression model is a supervised learning technique that is used to predict the value of a variable based on the value of other variable(s). The variable you want to predict is called the dependent variable or the response. The variable(s) you are using to predict is called the independent variable(s) or the predictor(s). 
 
 
-
 ## First linear model.
 
-For the first linear regression model we will model the number of shares by "weekday_is_thursday" (Was the article published on a Thursday?), "weekday_is_friday" (Was the article published on a Friday?) and "is_weekend" (Was the article published on the weekend?). It seems logical to assume that towards the ending of the week (Thursday - Weekend) if an article is published it is more likely to be shared than at the beginning of the week, hence the predictors "weekday_is_thursday", "weekday_is_friday"  and "is_weekend" was chosen for our first linear regression model.
+ We model the number of shares by the selected independent variables
+ 
+* "n_tokens_title" (Number of words in the title),
+
+* "n_tokens_content" (Number of words in the content)
+
+* "num_imgs" (Number of images)
+
+* "num_videos" (Number of videos)
+
+* "is_weekend" (Was the article published on the weekend?)
 
 
 ```{r}
-l_m1 <- train(shares ~ weekday_is_thursday +  weekday_is_friday + is_weekend, data = LifestyleTrain, method = "lm", 
+l_m1 <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + is_weekend, data = LifestyleTrain, method = "lm", 
 preProcess = c("center", "scale"),
 trControl = trainControl(method= "cv", number = 5))
 
 test_pred_l_m1 <- predict(l_m1, newdata = LifestyleTest)
 
-postResample(test_pred_l_m1, LifestyleTest$shares)
+m1 <- postResample(test_pred_l_m1, LifestyleTest$shares)
+m1
 ```
 
 ## Second linear model
 
-For the second linear regression model we will model the number of shares by "num_imgs" (Number of images), "num_videos" (Number of videos) and "num_hrefs" (Number of links). Pictures and videos in particular can invoke feelings of happiness and as such articles with more pictures and videos are more likely to be shared. Also if there is a greater number of links the greater possibility of the article being viewed and inherently shared. 
+ We model the number of shares by the selected independent variables
 
-For these reasons "num_imgs", "num_videos" and "num_hrefs" were thought to be good predictors for the number of shares.
+* "num_hrefs" (Number of links)
+
+* "weekday_is_monday" (Was the article published on a Monday?)
+
+* "weekday_is_tuesday" (Was the article published on a Tuesday?)
+
+* "weekday_is_wednesday" {Was the article published on a Wednesday?)
+
+* "weekday_is_thursday" (Was the article published on a Thursday?)
+
+* "weekday_is_friday" (Was the article published on a Friday?)
+
+* "self_reference_avg_sharess" (Avg. shares of referenced articles in Mashable)
+
 
 
 ```{r}
-l_m2 <- train(shares ~ num_imgs + num_videos + num_hrefs, data = LifestyleTrain, method = "lm", 
+l_m2 <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday + weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess,
+data = LifestyleTrain, method = "lm", 
 preProcess = c("center", "scale"),
 trControl = trainControl(method= "cv", number = 5))
 
 test_pred_l_m2 <- predict(l_m2, newdata = LifestyleTest)
 
-postResample(test_pred_l_m2, LifestyleTest$shares)
+m2 <- postResample(test_pred_l_m2, LifestyleTest$shares)
+m2
 ```
 
 
 ## Random forest model
 
-As stated in the the first linear regression model we will model the number of shares by "weekday_is_thursday" (Was the article published on a Thursday?), "weekday_is_friday" (Was the article published on a Friday?) and "is_weekend" (Was the article published on the weekend?). Therefore the predictors are "weekday_is_thursday", "weekday_is_friday" and "is_weekend".
 
 The idea behind the random forest model is the same as bagging but we use a random subset of predictors for each bootstrap sample tree fit (indicated by "mtry"). More specifically, it involves creating a boothstrap sample (same size with replacement), training the tree on this sample (no pruning necessary), repeating the process a large number of times and the final prediction is the average of those predictions. Finding the average of predictions decreases variance which improves predictions but unfortunately we lose interpretability.
 
+For our random forest We model the number of shares by the selected independent variables
+ 
+* "n_tokens_title" (Number of words in the title),
+
+* "n_tokens_content" (Number of words in the content)
+
+* "num_imgs" (Number of images)
+
+* "num_videos" (Number of videos)
+
+* "is_weekend" (Was the article published on the weekend?)
+
 
 ```{r}
-r_f <- train(shares ~ weekday_is_thursday +  weekday_is_friday + is_weekend, data = LifestyleTrain, method = "rf",
+r_f <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + is_weekend , data = LifestyleTrain, method = "rf",
  trControl=trainControl(method = "cv", number = 5),
  preProcess = c("center", "scale"),
  tuneGrid = data.frame(mtry = 1:3))
@@ -214,17 +280,34 @@ r_f <- train(shares ~ weekday_is_thursday +  weekday_is_friday + is_weekend, dat
 
 test_pred_r_f <- predict(r_f, newdata = LifestyleTest)
 
-postResample(test_pred_r_f, LifestyleTest$shares)
+m3 <- postResample(test_pred_r_f, LifestyleTest$shares)
+m3
 
 ```
 
 ## Boosted tree model
 
-As stated in the second linear regression model we will model the number of shares by "num_imgs" (Number of images), "num_videos" (Number of videos) and "num_hrefs" (Number of links). 
-
 The idea behind the boosting tree model is to train our tree slowly in a sequential manner so each tree that is created will be based on the previous one with predictions updated. 
 
-will explain tuneGrid later
+For our boosting tree we model the number of shares by the selected independent variables
+
+* "num_hrefs" (Number of links)
+
+* "weekday_is_monday" (Was the article published on a Monday?)
+
+* "weekday_is_tuesday" (Was the article published on a Tuesday?)
+
+* "weekday_is_wednesday" {Was the article published on a Wednesday?)
+
+* "weekday_is_thursday" (Was the article published on a Thursday?)
+
+* "weekday_is_friday" (Was the article published on a Friday?)
+
+* "self_reference_avg_sharess" (Avg. shares of referenced articles in Mashable)
+
+In our model we use all combination of the tuning parameters
+n.trees = c(25, 50, 100, 150, 200), interaction.depth = 1:4, shrinkage = 0.1 and   n.minobsinnode = 10).
+
 
 
 ```{r}
@@ -233,19 +316,44 @@ tune2<- 1:4
 tune3<- 0.1
 tune4<- 10
 
-boosted <- train(shares ~ num_imgs + num_videos + num_hrefs, data = LifestyleTrain, method = "gbm",
+boosted <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday + weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess, 
+data = LifestyleTrain, method = "gbm",
  trControl=trainControl(method = "cv", number = 5),
  preProcess = c("center", "scale"),
  tuneGrid = expand.grid(n.trees = tune1, interaction.depth = tune2, shrinkage = tune3,    n.minobsinnode = tune4))
 
 test_pred_boosted <- predict(boosted, newdata = LifestyleTest)
 
-postResample(test_pred_boosted, LifestyleTest$shares)
+m4 <- postResample(test_pred_boosted, LifestyleTest$shares)
+m4
 ```
 
 Next we do a comparison of the four models
 
-The model with the lowest rmse is Random Forest-winner
+# Comaprison
+
+The `postResample()` function was used to calculate useful statistics such as rmse and R squared values for each one of the four models. We summarize them in the tibble below.
+
+```{r}
+lm1 <- tibble(model = c("First linear regression"), RMSE = c(m1[[1]]), R2 = c(m1[[2]]))
+
+lm2 <- tibble(model = c("Second linear regression"), RMSE = c(m2[[1]]), R2 = c(m2[[2]]))
+
+rf <- tibble(model = c("Random Forest"), RMSE = c(m3[[1]]), R2 = c(m3[[2]]))
+
+Bos <- tibble(model = c("Boosting"), RMSE = c(m4[[1]]), R2 = c(m4[[2]]))
+
+rbind(lm1, lm2, rf, Bos)
+```
+
+
+RMSE is a metric that tells us how far apart the predicted values are from the observed values in a dataset, on average. The lower the RMSE, the better a model fits a dataset.
+
+R2 is a metric that tells us the proportion of the variance in the response variable of a regression model that can be explained by the predictor variables. This value ranges from 0 to 1. The higher the R2 value, the better a model fits a dataset.
+
+From the table above the First linear regession model has the lowest RMSE and the hightest R2 and is therefore our winner.
+
+
 
 
 
