@@ -83,12 +83,15 @@ OnlineNewsPopularity
 We now subset the data for the channel of interest lifestyle
 
 ```{r, echo=TRUE, eval=TRUE}
-#subsetting the OnlineNewsPopularity full raw data for the data chennel of interest -- Lifestyle
+#subsetting the OnlineNewsPopularity full raw data for the data channel of interest -- Lifestyle
 Lifestyle <- OnlineNewsPopularity %>% 
-               filter(data_channel_is_lifestyle == 1)
-# %>%  select ( share, var1, var2, var3, ... )
-# ! = remove vars -- example below
-#select ( ! c(var1, var2, var3, ... ) ) used to remove variables if needed
+               filter(data_channel_is_lifestyle == 1) %>%
+               # removing non-predictive variables per dataset description
+               # remove all data_channel_is_* variables because we already filtered on them and we do not want them included in the model!
+               select( ! c(url, timedelta, starts_with("data_channel_is_" ) ) )
+
+#tidyverse way of looking at the dataset -- similar to str()
+#glimpse(Lifestyle)
 
 #calling the Lifestyle object to view
 Lifestyle
@@ -294,9 +297,10 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                    output_file = "README.md",
                    output_options = list(html_preview = FALSE, keep_html = FALSE, toc = TRUE, toc_depth = "6", df_print = "tibble"))
 
-#directions
+#directions - save, commit, push, pull
+
  # - save 
- # - knit file via button
+ # - knit file via button (see the changes made in a url page html)
  # - render in the console with code above
  # - click files 3-4 in the Git tab -- 
  # - commit w/ comment button
