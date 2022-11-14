@@ -162,14 +162,12 @@ LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
 
 ## Summary statistics
 
+### Mean and Standard deviation
+
 The following data frame shows the mean and standard deviation statistics concerning lifestyle for a number of variables.
 
 
 ```{r}
-
-mean(Lifestyle$shares)
-
-sd(Lifestyle$shares)
 
 meanSD1 <- data.frame(Variable = c("Number of shares"), Mean = c(mean(Lifestyle$shares)), std_dev = c(sd(Lifestyle$shares)))
 
@@ -183,6 +181,12 @@ meanSD5 <- data.frame(Variable = c("Number of videos"), Mean = c(mean(Lifestyle$
 
 
 rbind(meanSD1, meanSD2, meanSD3, meanSD4, meanSD5)
+```
+
+### contingency tables
+
+```{r}
+
 ```
 
 
