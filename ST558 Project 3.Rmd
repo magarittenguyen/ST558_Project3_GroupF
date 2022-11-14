@@ -58,7 +58,6 @@ The data contains 39644 observations and 61 variables (58 predictive attributes,
 * "shares" (Number of shares (target))
 
 
-
 ### Independent or predictor variables
 
 * "data_channel_is_*" (Lifestyle, Entertainment, Business, Social Media, Tech, World)
@@ -126,9 +125,9 @@ Firstly, we read in the data using `read_csv()`.
 getwd()
 #reassign working directory
 #Magaritte's directory
-#setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
+setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
 #Matthew's directory
-setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
+#setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
 
 #read in data set .csv file in full
 #make sure that this is a relative path used...
@@ -161,6 +160,34 @@ Lifestyle
 
 # Summarizations
 
+Now split the data set we’ve created into a training and testing set. Use p = 0.7. 
+
+Here, we are splitting our created data, Lifestyle, into a training and test set with p = 0.7. These datasets will be called `LifestyleTrain` and `LifestyleTest`.
+
+Note: A seed was set for reproduciblility purposes.
+
+``` {r, echo=TRUE, eval=TRUE}
+#seed is set for reproducability 
+set.seed(123)
+
+#another way to split train and test data below
+# #indices to split on
+# train <- sample(1:nrow(my_heart), size = nrow(my_heart)*0.70)
+# test <- dplyr::setdiff(1:nrow(my_heart), train)
+# #subset
+# heartTrain <- my_heart[train, ]
+# heartTest <- my_heart[test, ]
+
+#indices to split on
+LifestyleIndex <- createDataPartition(Lifestyle$shares, p = 0.70, list = FALSE)
+#subset
+LifestyleTrain <- Lifestyle[ LifestyleIndex, ]
+LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
+
+```
+
+
+
 You should produce some basic (but meaningful) summary statistics and plots about the training data you are working with (especially as it relates to your response).
 
 As you will automate this same analysis across other data, you can’t describe the trends you see in the graph (unless you want to try to automate that!). You should describe what to look for in the summary statistics/plots to help the reader understand the summary or graph. Ex: A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created:
@@ -174,16 +201,175 @@ Each group member is responsible for producing some summary statistics (means, s
 Whenever you start thinking about fitting a regression model, the first think you want to do is data exploration (EDA - exploratory data analysis). Best think you can do is create scatter plots for each explanatory variable against the response variable. Scatter plots give us useful visualizations. we will look at how to fit the line in R (overlay), then predict a response using that line.
 
 ```{r, echo=TRUE, eval=TRUE}
+#this shows the summary stats for each variable in our dataset...
+# 31. weekday_is_monday: Was the article published on a Monday?
+summary(LifestyleTrain$weekday_is_monday)
+# 32. weekday_is_tuesday: Was the article published on a Tuesday?
+summary(LifestyleTrain$weekday_is_tuesday)
+# 33. weekday_is_wednesday: Was the article published on a Wednesday?
+summary(LifestyleTrain$weekday_is_wednesday)
+# 34. weekday_is_thursday: Was the article published on a Thursday?
+summary(LifestyleTrain$weekday_is_thursday)
+# 35. weekday_is_friday: Was the article published on a Friday?
+summary(LifestyleTrain$weekday_is_friday)
+# 36. weekday_is_saturday: Was the article published on a Saturday?
+summary(LifestyleTrain$weekday_is_saturday)
+# 37. weekday_is_sunday: Was the article published on a Sunday?
+summary(LifestyleTrain$weekday_is_sunday)
+# 38. is_weekend: Was the article published on the weekend? 
+summary(LifestyleTrain$is_weekend)
+# 60. shares: Number of shares (target)
+summary(LifestyleTrain$shares)
+
+#contigency tables
+# example: table (crabs$color, crabs$spine, crabs$y)
+# monday is the mot published articels... compare to diff of the week
+table(LifestyleTrain$weekday_is_monday, LifestyleTrain$weekday_is_tuesday)
+table(LifestyleTrain$weekday_is_monday, LifestyleTrain$weekday_is_wednesday)
+table(LifestyleTrain$weekday_is_monday, LifestyleTrain$weekday_is_thursday)
+table(LifestyleTrain$weekday_is_monday, LifestyleTrain$weekday_is_friday)
+
+
+#sum stats for all 61 vars - not helpful...
+#Lifestlye_sumstats_Train <- summary(LifestyleTrain)
+#calling Lifestlye_sumstats_Train object to see our summary stats
+#Lifestlye_sumstats_Train
+#check structure of objects
+#str(LifestyleTrain)
+#str(Lifestlye_sumstats_Train)
+
+#plots include - scatter plots, correlation plots -- plots for continuous data...
+#do we need bar plots?
+
+#data for descriptive plots:
+plot_data_weekday_weekend <- LifestyleTrain %>%
+                               mutate ( weekday = case_when(
+                                          weekday_is_monday    == 1 ~ "Monday"   ,
+                                          weekday_is_tuesday   == 1 ~ "Tuesday"  ,
+                                          weekday_is_wednesday == 1 ~ "Wednesday",
+                                          weekday_is_thursday  == 1 ~ "Thursday" ,
+                                          weekday_is_friday    == 1 ~ "Friday"   ,
+                                          weekday_is_saturday  == 1 ~ "Saturday" ,
+                                          weekday_is_sunday    == 1 ~ "Sunday"   ,
+                                          TRUE ~ NA_character_
+                                      ),
+                                        weekday = factor(
+                                          x = weekday,
+                                          levels = c("Monday", "Tuesday", "Wednesday",
+                                                     "Thursday", "Friday", "Saturday",
+                                                     "Sunday"),
+                                          ordered = TRUE
+                                          ) )
+
+#A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
+ggplot(data=plot_data_weekday_weekend, 
+            aes(y=shares, x=weekday)) + 
+            labs(x="Articles Published on Certain Days of the Week", y="Shares") +
+            geom_boxplot() + scale_y_log10() +
+            geom_point(aes(color=weekday), position="jitter") 
+# when we take the log of the data, we can see easier... Poisson...
+# plot scatter after boxplot because we want to see where the majority of the dots are...
+
+#total articles published is actually higher Monday and fewer on the weekend. but boxplots look like they are lower on the weekdays because more articles are published but less shares are occurring...
+
+
+#plots - scatter plot with boxplot overlayed
+# 31. weekday_is_monday: Was the article published on a Monday?
+#this one doesnt work bc we need levels...
+#ggplot(data=LifestyleTrain, aes(y=shares, x=weekday_is_monday)) + geom_point()
+
+# the y - axis is using a log axis not a linear axis, but the plots are more easily interpretable /  visually more ituitive with this transformation.
+ggplot(data=LifestyleTrain %>% 
+              mutate(weekday_fctr = factor(x=weekday_is_monday,  
+              levels=c(0,1), labels = c("No", "Yes"))), 
+            aes(y=shares, x=weekday_fctr)) + 
+            labs(x="Articles Published on Monday", y="Shares", color = "Published") +
+            geom_boxplot() + scale_y_log10() +
+            geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
+# 32. weekday_is_tuesday: Was the article published on a Tuesday
+ggplot(data=LifestyleTrain %>% 
+              mutate(weekday_fctr = factor(x=weekday_is_tuesday,  
+              levels=c(0,1), labels = c("No", "Yes"))), 
+            aes(y=shares, x=weekday_fctr)) + 
+            labs(x="Articles Published on Tuesday", y="Shares", color = "Published") +
+            geom_boxplot() + scale_y_log10() +
+            geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
+# 33. weekday_is_wednesday: Was the article published on a Wednesday?
+ggplot(data=LifestyleTrain %>% 
+              mutate(weekday_fctr = factor(x=weekday_is_wednesday,  
+              levels=c(0,1), labels = c("No", "Yes"))), 
+            aes(y=shares, x=weekday_fctr)) + 
+            labs(x="Articles Published on Wednesday", y="Shares", color = "Published") +
+            geom_boxplot() + scale_y_log10() +
+            geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
+# 34. weekday_is_thursday: Was the article published on a Thursday?
+ggplot(data=LifestyleTrain %>% 
+              mutate(weekday_fctr = factor(x=weekday_is_thursday,  
+              levels=c(0,1), labels = c("No", "Yes"))), 
+            aes(y=shares, x=weekday_fctr)) + 
+            labs(x="Articles Published on Thursday", y="Shares", color = "Published") +
+            geom_boxplot() + scale_y_log10() +
+            geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
+# 35. weekday_is_friday: Was the article published on a Friday?
+ggplot(data=LifestyleTrain %>% 
+              mutate(weekday_fctr = factor(x=weekday_is_friday,  
+              levels=c(0,1), labels = c("No", "Yes"))), 
+            aes(y=shares, x=weekday_fctr)) + 
+            labs(x="Articles Published on Friday", y="Shares", color = "Published") +
+            geom_boxplot() + scale_y_log10() +
+            geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
+# 36. weekday_is_saturday: Was the article published on a Saturday?
+ggplot(data=LifestyleTrain %>% 
+              mutate(weekday_fctr = factor(x=weekday_is_saturday,  
+              levels=c(0,1), labels = c("No", "Yes"))), 
+            aes(y=shares, x=weekday_fctr)) + 
+            labs(x="Articles Published on Saturday", y="Shares", color = "Published") +
+            geom_boxplot() + scale_y_log10() +
+            geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
+# 37. weekday_is_sunday: Was the article published on a Sunday?
+ggplot(data=LifestyleTrain %>% 
+              mutate(weekday_fctr = factor(x=weekday_is_sunday,  
+              levels=c(0,1), labels = c("No", "Yes"))), 
+            aes(y=shares, x=weekday_fctr)) + 
+            labs(x="Articles Published on Sunday", y="Shares", color = "Published") +
+            geom_boxplot() + scale_y_log10() +
+            geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
+# # 38. is_weekend: Was the article published on the weekend? 
+# ggplot(data=LifestyleTrain %>% 
+#               mutate(weekday_fctr = factor(x=is_weekend,  
+#               levels=c(0,1), labels = c("No", "Yes"))), 
+#             aes(y=shares, x=weekday_fctr)) + 
+#             labs(x="Articles Published on Monday", y="Shares", color = "Published") +
+#             geom_boxplot() + scale_y_log10() +
+#             geom_point(aes(color=weekday_fctr), position="jitter") 
+
+
+# i can make conclusions based on summary() median, min, max, bc i trasfomred for visibility
+  
+
+                               
+```
+The y - axis is using a log axis not a linear axis, but the plots are more easily interpretable / visually more intuitive with this transformation.The general shape of the plots is correct.
+
+We can inspect the trend of shares as a function of the different days of the week that the articles are published. 
+
+If you see a presence of outliers, this may cause the mean to shift in that direction, but the meidan will not be effected as much. If you see that the median is not centered within the box, then there is a presence of skewness in that particular direction. Also, if you see that there are more observations / dots on one graph while comparing publication (Yes/No), this is meaningful within the plot itself and also across the different days of the week.
+
+
+
+```{r, echo=TRUE, eval=TRUE}
 #what question are we trying to answer here? 
 # how to predict shares given the variables you have...
 
 #fitting the model
-fit_Lifestyle <- lm(shares ~ . , data = Lifestyle)
+#fit_Lifestyle <- lm(shares ~ . , data = Lifestyle)
 #call fit_Lifestyle object - remember this is an lm object
-fit_Lifestyle
+#fit_Lifestyle
 # check fit_Lifestyle attributes
-attributes(fit_Lifestyle)
+#attributes(fit_Lifestyle)
 #fit_Lifestyle[["residuals"]]
+
+#summary stats for vars of interest - 
 
 plot(fit_Lifestyle)
 ggplot(data=fit_Lifestyle, aes(y=shares, x=rate_positive_words)) + geom_point()
@@ -241,52 +427,6 @@ corr_vars <- as.tibble ( Lifestyle_corr[ ,"shares"] ) %>%
 #need to do some sort of type of EDA in order to see if variables are highly correlated
 #here we need to summary statistics via summary() and plots
 
-#this shows the summary stats for each variable in our dataset...
-Lifestlye_sumstats_Train <- summary(LifestyleTrain)
-#calling Lifestlye_sumstats_Train object to see our summary stats
-Lifestlye_sumstats_Train
-#check structure of objects
-str(LifestyleTrain)
-str(Lifestlye_sumstats_Train)
-
-#plots include - scatter plots, correlation plots -- plots for continuous data...
-#do we need bar plots?
-
-#A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
-ggplot(data=LifestyleTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
-
-```
-
-Now split the data set we’ve created into a training and testing set. Use p = 0.7. 
-
-Here, we are splitting our created data, Lifestyle, into a training and test set with p = 0.7. These datasets will be called `LifestyleTrain` and `LifestyleTest`.
-
-Note: A seed was set for reproduciblility purposes.
-
-``` {r, echo=TRUE, eval=TRUE}
-#seed is set for reproducability 
-set.seed(123)
-
-#another way to split train and test data below
-# #indices to split on
-# train <- sample(1:nrow(my_heart), size = nrow(my_heart)*0.70)
-# test <- dplyr::setdiff(1:nrow(my_heart), train)
-# #subset
-# heartTrain <- my_heart[train, ]
-# heartTest <- my_heart[test, ]
-
-#indices to split on
-LifestyleIndex <- createDataPartition(Lifestyle$shares, p = 0.70, list = FALSE)
-#subset
-LifestyleTrain <- Lifestyle[ LifestyleIndex, ]
-LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
-
-```
-
-
-
-
-```{r, echo=TRUE, eval=TRUE}
 #this shows the summary stats for each variable in our dataset...
 Lifestlye_sumstats_Train <- summary(LifestyleTrain)
 #calling Lifestlye_sumstats_Train object to see our summary stats
