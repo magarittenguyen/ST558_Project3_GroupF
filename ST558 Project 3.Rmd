@@ -356,7 +356,7 @@ We can inspect the trend of shares as a function of the different days of the we
 If you see a presence of outliers, this may cause the mean to shift in that direction, but the meidan will not be effected as much. If you see that the median is not centered within the box, then there is a presence of skewness in that particular direction. Also, if you see that there are more observations / dots on one graph while comparing publication (Yes/No), this is meaningful within the plot itself and also across the different days of the week.
 
 
-
+<!-- might use this later dont delete yet -->
 ```{r, echo=TRUE, eval=TRUE}
 #what question are we trying to answer here? 
 # how to predict shares given the variables you have...
@@ -476,12 +476,19 @@ A Linear regression model is a supervised learning technique that is used to pre
 
 
 ```{r, echo=TRUE, eval=TRUE}
-l_m1 <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + is_weekend, data = LifestyleTrain, method = "lm", 
-preProcess = c("center", "scale"),
-trControl = trainControl(method= "cv", number = 5))
+#linear regression model 1
+l_m1 <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + 
+                       is_weekend, 
+              data = LifestyleTrain, 
+              method = "lm", 
+              preProcess = c("center", "scale"),
+              trControl = trainControl(method= "cv", number = 5))
+#l_m1
 
+#predicting on the LifestyleTest data with linear regression model 1
 test_pred_l_m1 <- predict(l_m1, newdata = LifestyleTest)
 
+#finding the best model - more explicit
 m1 <- postResample(test_pred_l_m1, LifestyleTest$shares)
 m1
 ```
@@ -507,20 +514,27 @@ m1
 
 
 ```{r, echo=TRUE, eval=TRUE}
-l_m2 <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday + weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess,
-data = LifestyleTrain, method = "lm", 
-preProcess = c("center", "scale"),
-trControl = trainControl(method= "cv", number = 5))
+#linear regression model 2
+l_m2 <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday +
+                       weekday_is_wednesday + weekday_is_thursday + weekday_is_friday +
+                       self_reference_avg_sharess,
 
+              data = LifestyleTrain, 
+              method = "lm", 
+              preProcess = c("center", "scale"),
+              trControl = trainControl(method= "cv", number = 5))
+
+#predictions based on linear model 2 for the LifestyleTest data
 test_pred_l_m2 <- predict(l_m2, newdata = LifestyleTest)
 
+#best model chosen - RMSE reported explicity
+#goal is to compare RMSE and see which one is the lowest!
 m2 <- postResample(test_pred_l_m2, LifestyleTest$shares)
 m2
 ```
 
 
 ## Random forest model
-
 
 The idea behind the random forest model is the same as bagging but we use a random subset of predictors for each bootstrap sample tree fit (indicated by "mtry"). More specifically, it involves creating a boothstrap sample (same size with replacement), training the tree on this sample (no pruning necessary), repeating the process a large number of times and the final prediction is the average of those predictions. Finding the average of predictions decreases variance which improves predictions but unfortunately we lose interpretability.
 
@@ -538,16 +552,19 @@ For our random forest We model the number of shares by the selected independent 
 
 
 ```{r, echo=TRUE, eval=TRUE}
-r_f <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + is_weekend , data = LifestyleTrain, method = "rf",
- trControl=trainControl(method = "cv", number = 5),
- preProcess = c("center", "scale"),
- tuneGrid = data.frame(mtry = 1:3))
-
+r_f <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + 
+                      is_weekend , data = LifestyleTrain, method = "rf",
+  
+             trControl=trainControl(method = "cv", number = 5),
+             preProcess = c("center", "scale"),
+             tuneGrid = data.frame(mtry = 1:3))
 
 test_pred_r_f <- predict(r_f, newdata = LifestyleTest)
 
 m3 <- postResample(test_pred_r_f, LifestyleTest$shares)
 m3
+
+#bootstrapping will take some time...
 
 ```
 
@@ -609,7 +626,8 @@ rf <- tibble(model = c("Random Forest"), RMSE = c(m3[[1]]), R2 = c(m3[[2]]))
 
 Bos <- tibble(model = c("Boosting"), RMSE = c(m4[[1]]), R2 = c(m4[[2]]))
 
-rbind(lm1, lm2, rf, Bos)
+RMSE_table <- rbind(lm1, lm2, rf, Bos)
+RMSE_table
 ```
 
 
@@ -619,8 +637,17 @@ R2 is a metric that tells us the proportion of the variance in the response vari
 
 From the table above the First linear regession model has the lowest RMSE and the hightest R2 and is therefore our winner.
 
+```{r, echo=TRUE, eval=TRUE}
 
+#pick the smallest RMSE for the best model...
 
+final_result <- RMSE_table %>%
+                filter ( min(RMSE) == RMSE )
+
+final_result
+
+```
+When comparing all 4 of our models, we are looking for the smallest value of RMSE to tell us which model is the best. In this situation, we can say that the smallest RMSE is `r final_result$RMSE` and this comes from the `r final_result$model` model.
 
 
 
