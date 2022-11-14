@@ -17,6 +17,8 @@ Magaritte Nguyen and Matthew Sookoo
     -   <a href="#reading-in-the-data" id="toc-reading-in-the-data">Reading in
         the data</a>
 -   <a href="#summarizations" id="toc-summarizations">Summarizations</a>
+    -   <a href="#summary-statistics" id="toc-summary-statistics">Summary
+        statistics</a>
 -   <a href="#modelling" id="toc-modelling">Modelling</a>
     -   <a href="#first-linear-model" id="toc-first-linear-model">First linear
         model.</a>
@@ -223,6 +225,47 @@ LifestyleIndex <- createDataPartition(Lifestyle$shares, p = 0.70, list = FALSE)
 LifestyleTrain <- Lifestyle[ LifestyleIndex, ]
 LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
 ```
+
+## Summary statistics
+
+The following data frame shows the mean and standard deviation
+statistics concerning lifestyle for a number of variables.
+
+``` r
+mean(Lifestyle$shares)
+```
+
+    ## [1] 3682.123
+
+``` r
+sd(Lifestyle$shares)
+```
+
+    ## [1] 8885.017
+
+``` r
+meanSD1 <- data.frame(Variable = c("Number of shares"), Mean = c(mean(Lifestyle$shares)), std_dev = c(sd(Lifestyle$shares)))
+
+meanSD2 <- data.frame(Variable = c("Number of words in the title"), Mean = c(mean(Lifestyle$n_tokens_title)), std_dev = c(sd(Lifestyle$n_tokens_title)))
+
+meanSD3 <- data.frame(Variable = c("Number of words in the content"), Mean = c(mean(Lifestyle$n_tokens_content)), std_dev = c(sd(Lifestyle$n_tokens_content)))
+
+meanSD4 <- data.frame(Variable = c("Number of images"), Mean = c(mean(Lifestyle$num_imgs)), std_dev = c(sd(Lifestyle$num_imgs)))
+
+meanSD5 <- data.frame(Variable = c("Number of videos"), Mean = c(mean(Lifestyle$num_videos)), std_dev = c(sd(Lifestyle$num_videos)))
+
+
+rbind(meanSD1, meanSD2, meanSD3, meanSD4, meanSD5)
+```
+
+    ## # A tibble: 5 × 3
+    ##   Variable                           Mean std_dev
+    ##   <chr>                             <dbl>   <dbl>
+    ## 1 Number of shares               3682.    8885.  
+    ## 2 Number of words in the title      9.77     1.91
+    ## 3 Number of words in the content  621.     566.  
+    ## 4 Number of images                  4.90     8.15
+    ## 5 Number of videos                  0.475    1.92
 
 ``` r
 #what question are we trying to answer here? 

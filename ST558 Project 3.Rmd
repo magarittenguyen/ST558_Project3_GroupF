@@ -139,6 +139,7 @@ Here, we are splitting our created data, Lifestyle, into a training and test set
 
 Note: a seed was set for reproduciblility purposes.
 
+
 ``` {r, echo=TRUE, eval=TRUE}
 #seed is set for reproducability 
 set.seed(123)
@@ -158,6 +159,36 @@ LifestyleTrain <- Lifestyle[ LifestyleIndex, ]
 LifestyleTest  <- Lifestyle[-LifestyleIndex, ]
 
 ```
+
+## Summary statistics
+
+The following data frame shows the mean and standard deviation statistics concerning lifestyle for a number of variables.
+
+
+```{r}
+
+mean(Lifestyle$shares)
+
+sd(Lifestyle$shares)
+
+meanSD1 <- data.frame(Variable = c("Number of shares"), Mean = c(mean(Lifestyle$shares)), std_dev = c(sd(Lifestyle$shares)))
+
+meanSD2 <- data.frame(Variable = c("Number of words in the title"), Mean = c(mean(Lifestyle$n_tokens_title)), std_dev = c(sd(Lifestyle$n_tokens_title)))
+
+meanSD3 <- data.frame(Variable = c("Number of words in the content"), Mean = c(mean(Lifestyle$n_tokens_content)), std_dev = c(sd(Lifestyle$n_tokens_content)))
+
+meanSD4 <- data.frame(Variable = c("Number of images"), Mean = c(mean(Lifestyle$num_imgs)), std_dev = c(sd(Lifestyle$num_imgs)))
+
+meanSD5 <- data.frame(Variable = c("Number of videos"), Mean = c(mean(Lifestyle$num_videos)), std_dev = c(sd(Lifestyle$num_videos)))
+
+
+rbind(meanSD1, meanSD2, meanSD3, meanSD4, meanSD5)
+```
+
+
+
+
+
 
 
 
@@ -179,6 +210,9 @@ Lifestlye_sumstats_Train
 #check structure of objects
 str(LifestyleTrain)
 str(Lifestlye_sumstats_Train)
+
+
+
 
 #plots include - scatter plots, correlation plots -- plots for continuous data...
 #do we need bar plots?
