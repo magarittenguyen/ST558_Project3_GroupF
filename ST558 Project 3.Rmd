@@ -377,12 +377,12 @@ If you see a presence of outliers, this may cause the mean to shift in that dire
 # how to predict shares given the variables you have...
 
 #fitting the model
-#fit_Lifestyle <- lm(shares ~ . , data = Lifestyle)
+fit_Lifestyle <- lm(shares ~ . , data = Lifestyle)
 #call fit_Lifestyle object - remember this is an lm object
-#fit_Lifestyle
+fit_Lifestyle
 # check fit_Lifestyle attributes
-#attributes(fit_Lifestyle)
-#fit_Lifestyle[["residuals"]]
+attributes(fit_Lifestyle)
+fit_Lifestyle[["residuals"]]
 
 #summary stats for vars of interest - 
 
@@ -396,8 +396,8 @@ ggplot(data=fit_Lifestyle, aes(y=shares, x=rate_positive_words)) + geom_point()
 Lifestyle_corr <- cor(x=Lifestyle)
 #call Lifestyle_corr object to look at correlation between vars and shares response var
 #drop to keep in matrix and not turn into a vector
-#shares_corr <- Lifestyle_corr[ ,"shares", drop=FALSE]
-shares_corr <- Lifestyle_corr[ ,"shares"]
+shares_corr <- Lifestyle_corr[ ,"shares", drop=FALSE]
+#shares_corr <- Lifestyle_corr[ ,"shares"]
 is(shares_corr) #matrix with the drop=TRUE option
 #convert to tibble
 #shares_corr_tibble <- as.tibble(shares_corr)
@@ -410,7 +410,7 @@ shares_corr_tibble
 
 
 # call shares_corr_tibble object
-shares_corr_tibble #this currently does not have row names...
+#shares_corr_tibble #this currently does not have row names...
 rownames(shares_corr)
 
 #checking structure and type of object
@@ -420,7 +420,7 @@ rownames(shares_corr)
 #finds highly correlated variables and you can set a cutoff (default is +/ 0.9)
 #convert to tibble because using drylr chaining / piping
 corr_vars <- as.tibble ( Lifestyle_corr[ ,"shares"] ) %>%
-             filter ( abs(shares) >= 0.9 )
+             filter ( abs(value) >= 0.9 )
 
 #dont need this anymore...
 #corr_vars <- findCorrelation(x=Lifestyle_corr, cutoff = +/- 0.9, verbose = TRUE, names = TRUE)
@@ -833,7 +833,7 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                    output_options = list(html_preview = FALSE, keep_html = FALSE, 
                                          toc = TRUE, toc_depth = "6", 
                                          df_print = "tibble"), 
-                   params = list(channel="data_channel_is_lifestyle" )
+                   params = list(channel="data_channel_is_lifestyle" ))
 
 #directions - save, commit, push, pull
 
