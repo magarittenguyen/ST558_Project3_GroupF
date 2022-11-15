@@ -134,7 +134,7 @@ MORE ADDED LATER AS REQUIRED…
 
 <!-- Render Code -->
 
-```{r}
+```r
 # 13. data_channel_is_lifestyle: Is data channel 'Lifestyle'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
