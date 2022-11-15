@@ -2,19 +2,17 @@
 title: "ST558 Project 3 Group F"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
-# params:
-#    channel: "data_channel_is_lifestyle"
+  params:
+    channel: NULL
+    label: ""
 ---
 
-<!-- testing automation form yaml header -->
-<!-- it works -->
-```{r, echo=FALSE, eval=FALSE}
+```{r echo=FALSE, eval=FALSE}
+    #"data_channel_is_lifestyle", "data_channel_is_entertainment", "data_channel_is_bus", "data_channel_is_socmed", "data_channel_is_tech", "data_channel_is_world"
 
-params$channel
+    #"Lifestyle", "Entertainment", "Business", "Social Media", "Tech", "World"
 
 ```
-
-
 
 <!-- 
 ############################################################# 
@@ -548,9 +546,7 @@ m1
 ```{r, echo=TRUE, eval=TRUE}
 #linear regression model 2
 l_m2 <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday +
-                       weekday_is_wednesday + weekday_is_thursday + weekday_is_friday +
-                       self_reference_avg_sharess,
-
+                       weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess,
               data = ChannelTrain, 
               method = "lm", 
               preProcess = c("center", "scale"),
@@ -584,9 +580,9 @@ For our random forest We model the number of shares by the selected independent 
 
 
 ```{r, echo=TRUE, eval=TRUE}
-r_f <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + 
-                      is_weekend , data = ChannelTrain, method = "rf",
-  
+r_f <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos +                            is_weekend , 
+             data = ChannelTrain,
+             method = "rf",
              trControl=trainControl(method = "cv", number = 5),
              preProcess = c("center", "scale"),
              tuneGrid = data.frame(mtry = 1:3))
@@ -631,11 +627,13 @@ tune2<- 1:4
 tune3<- 0.1
 tune4<- 10
 
-boosted <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday + weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess, 
-data = ChannelTrain, method = "gbm",
- trControl=trainControl(method = "cv", number = 5),
- preProcess = c("center", "scale"),
- tuneGrid = expand.grid(n.trees = tune1, interaction.depth = tune2, shrinkage = tune3,    n.minobsinnode = tune4))
+boosted <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday +
+                          weekday_is_wednesday + weekday_is_thursday + 
+                          weekday_is_friday + self_reference_avg_sharess, 
+                 data = ChannelTrain, method = "gbm",
+                 trControl=trainControl(method = "cv", number = 5),
+                 preProcess = c("center", "scale"),
+                 tuneGrid = expand.grid(n.trees = tune1, interaction.depth = tune2,                                             shrinkage = tune3, n.minobsinnode = tune4) )
 
 test_pred_boosted <- predict(boosted, newdata = ChannelTest)
 
@@ -650,11 +648,11 @@ Next we do a comparison of the four models
 The `postResample()` function was used to calculate useful statistics such as rmse and R squared values for each one of the four models. We summarize them in the tibble below.
 
 ```{r, echo=TRUE, eval=TRUE}
-lm1 <- tibble(model = c("First linear regression"), RMSE = c(m1[[1]]), R2 = c(m1[[2]]))
+lm1 <- tibble(model = c("First Linear Regression"), RMSE = c(m1[[1]]), R2 = c(m1[[2]]))
 
-lm2 <- tibble(model = c("Second linear regression"), RMSE = c(m2[[1]]), R2 = c(m2[[2]]))
+lm2 <- tibble(model = c("Second Linear Regression"), RMSE = c(m2[[1]]), R2 = c(m2[[2]]))
 
-rf <- tibble(model = c("Random Forest"), RMSE = c(m3[[1]]), R2 = c(m3[[2]]))
+rf  <- tibble(model = c("Random Forest"), RMSE = c(m3[[1]]), R2 = c(m3[[2]]))
 
 Bos <- tibble(model = c("Boosting"), RMSE = c(m4[[1]]), R2 = c(m4[[2]]))
 
@@ -788,7 +786,7 @@ If we see a negative trend then articles with more positive words tend to be sha
 Each group member is responsible for producing some summary statistics (means, sds, contingency tables, etc.) and for producing at least three graphs (each) of the data.
 
 # Modeling
-You’ll need to split the data into a training (70% of the data) and test set (30% of the data). Use set.seed() to make things reproducible.
+<!-- You’ll need to split the data into a training (70% of the data) and test set (30% of the data). Use set.seed() to make things reproducible. -->
 
 The goal is to create models for predicting the number of shares in some way. Each group member should contribute a linear regression model and an ensemble tree-based model. As we are automating things, describing the chosen model is tough, so no need to worry about that.
 
@@ -799,12 +797,12 @@ Prior to the models fit using linear regression, the first group member should p
 
 Prior to each ensemble model, you should provide a short but reasonably thorough explanation of the ensemble model you are using (so one for each group member).
 
-# Comparison
-All four of the models should be compared on the test set and a winner declared (this should be automated to be correct across all the created documents).
+<!-- # Comparison -->
+<!-- All four of the models should be compared on the test set and a winner declared (this should be automated to be correct across all the created documents). -->
 
-This can be done by one group member and the automation done by the other (see below).
+<!-- This can be done by one group member and the automation done by the other (see below). -->
 
-# Automation
+<!-- # Automation -->
 <!-- Once you’ve completed the above for a particular data channel, adapt the code so that you can use a parameter in your build process. You should be able to automatically generate an analysis report for each data_channel_is_* variable - although again, you may want to create a new variable to help with the subsetting. You’ll end up with six total outputted documents. -->
 
 <!-- This should be done by the group member that doesn’t automate the comparison of models part. -->
@@ -844,6 +842,29 @@ points on the project.
 #otherwise running from within the program doesn't print out every result
 #e.g. combo object and the final proportions tibble
 
+#Notes for Automation
+#might be able to just use lifestyle and then use paste function etc to simplify / minimize number of vectors needing to be created...
+
+#get create vector of channels 
+channel_options <- c("data_channel_is_lifestyle", "data_channel_is_entertainment", 
+                     "data_channel_is_bus", "data_channel_is_socmed", 
+                     "data_channel_is_tech", "data_channel_is_world" )
+label_options <-c("Lifestyle","Entertainment", "Business", "Social Media", "Tech",
+                  "World")
+
+#create filenames
+output_file <- paste0(label_options, ".md")
+
+#create a list for each team with just the team name parameter
+params = lapply(channel_options, FUN = function(x){list(channel = x)})
+
+#put into a data frame
+reports <- tibble(output_file, params)
+
+```
+
+
+```{r echo=FALSE, eval=FALSE}
 # 13. data_channel_is_lifestyle: Is data channel 'Lifestyle'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",

@@ -34,8 +34,6 @@ Magaritte Nguyen and Matthew Sookoo
 -   <a href="#automation" id="toc-automation">Automation</a>
 -   <a href="#submission" id="toc-submission">Submission</a>
 
-<!-- testing automation form yaml header -->
-<!-- it works -->
 <!-- 
 ############################################################# 
 #############################################################
