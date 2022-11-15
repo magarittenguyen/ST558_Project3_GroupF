@@ -1,5 +1,5 @@
 ---
-title: "ST558 Project 3"
+title: "ST558 Project 3 Group F"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
 output: 
