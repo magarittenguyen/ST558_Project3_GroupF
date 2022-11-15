@@ -2,13 +2,13 @@
 title: "ST558 Project 3 Group F"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
-params:
-   channel: "data_channel_is_lifestyle"
+# params:
+#    channel: "data_channel_is_lifestyle"
 ---
 
 <!-- testing automation form yaml header -->
 <!-- it works -->
-```{r, echo=TRUE, eval=TRUE}
+```{r, echo=FALSE, eval=FALSE}
 
 params$channel
 
@@ -845,7 +845,7 @@ points on the project.
 # 13. data_channel_is_lifestyle: Is data channel 'Lifestyle'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
-                   output_file = "README.md",
+                   output_file = "Lifestyle_Summary.md",
                    output_options = list(html_preview = FALSE, keep_html = FALSE, 
                                          toc = TRUE, toc_depth = "6", 
                                          df_print = "tibble"), 
@@ -854,16 +854,47 @@ rmarkdown:: render("ST558 Project 3.Rmd",
 # 14. data_channel_is_entertainment: Is data channel 'Entertainment'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
-                   output_file = "README.md",
+                   output_file = "Entertainment_Summary.md",
                    output_options = list(html_preview = FALSE, keep_html = FALSE, 
                                          toc = TRUE, toc_depth = "6", 
                                          df_print = "tibble"), 
                    params = list(channel="data_channel_is_entertainment" ))
 
 # 15. data_channel_is_bus: Is data channel 'Business'?
+rmarkdown:: render("ST558 Project 3.Rmd",
+                   output_format = "github_document",
+                   output_file = "Business_Summary.md",
+                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
+                                         toc = TRUE, toc_depth = "6", 
+                                         df_print = "tibble"), 
+                   params = list(channel="data_channel_is_bus" ))
+
 # 16. data_channel_is_socmed: Is data channel 'Social Media'?
+rmarkdown:: render("ST558 Project 3.Rmd",
+                   output_format = "github_document",
+                   output_file = "SocialMedia_Summary.md",
+                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
+                                         toc = TRUE, toc_depth = "6", 
+                                         df_print = "tibble"), 
+                   params = list(channel="data_channel_is_socmed" ))
+
 # 17. data_channel_is_tech: Is data channel 'Tech'?
+rmarkdown:: render("ST558 Project 3.Rmd",
+                   output_format = "github_document",
+                   output_file = "Tech_Summary.md",
+                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
+                                         toc = TRUE, toc_depth = "6", 
+                                         df_print = "tibble"), 
+                   params = list(channel="data_channel_is_tech" ))
+
 # 18. data_channel_is_world: Is data channel 'World'?
+rmarkdown:: render("ST558 Project 3.Rmd",
+                   output_format = "github_document",
+                   output_file = "World_Summary.md",
+                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
+                                         toc = TRUE, toc_depth = "6", 
+                                         df_print = "tibble"), 
+                   params = list(channel="data_channel_is_world" ))
 
 
 #directions - save, commit, push, pull
