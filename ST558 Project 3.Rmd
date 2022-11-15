@@ -395,7 +395,20 @@ ggplot(data=fit_Lifestyle, aes(y=shares, x=rate_positive_words)) + geom_point()
 #EDA
 #starting point... correlation - shares vs. each var
 #every pairwise combo
-Lifestyle_corr <- cor(x=Lifestyle)
+Lifestyle_corr <- cor(x=Lifestyle %>% 
+                          select (shares, starts_with("weekday_is_") ) )
+
+# cor_mat <- cor(data %>% select(RentedBikeCount, Temperature, Humidity, WindSpeed,
+# Hour, Visibility, DewPointTemp,
+# Rainfall, Snowfall), method = "pearson")
+# corrplot(cor_mat, hc.order = TRUE,
+# type = "lower",
+# tl.pos = "lt",
+# title = "Correlation Coefficients for Bike Rental Data",
+# subtitle = "Correlation Coefficients for Bike Rental Data",
+# mar=c(0,0,2,0)
+# )
+
 #call Lifestyle_corr object to look at correlation between vars and shares response var
 #drop to keep in matrix and not turn into a vector
 shares_corr <- Lifestyle_corr[ ,"shares", drop=FALSE]
@@ -822,13 +835,14 @@ points on the project.
 • You should use appropriate markdown options/formatting (you can lose up to 20 points) for not doing so.
 -->
 
-<!-- code needed to render pdf file  -->
+<!-- code needed to render pdf file -->
 
 ```{r, echo=FALSE, eval=FALSE}
 #this code need to be copied and ran in the console to print out results
 #otherwise running from within the program doesn't print out every result
 #e.g. combo object and the final proportions tibble
 
+# 13. data_channel_is_lifestyle: Is data channel 'Lifestyle'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
                    output_file = "README.md",
@@ -836,6 +850,21 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                                          toc = TRUE, toc_depth = "6", 
                                          df_print = "tibble"), 
                    params = list(channel="data_channel_is_lifestyle" ))
+
+# 14. data_channel_is_entertainment: Is data channel 'Entertainment'?
+rmarkdown:: render("ST558 Project 3.Rmd",
+                   output_format = "github_document",
+                   output_file = "README.md",
+                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
+                                         toc = TRUE, toc_depth = "6", 
+                                         df_print = "tibble"), 
+                   params = list(channel="data_channel_is_entertainment" ))
+
+# 15. data_channel_is_bus: Is data channel 'Business'?
+# 16. data_channel_is_socmed: Is data channel 'Social Media'?
+# 17. data_channel_is_tech: Is data channel 'Tech'?
+# 18. data_channel_is_world: Is data channel 'World'?
+
 
 #directions - save, commit, push, pull
 

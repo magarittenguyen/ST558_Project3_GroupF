@@ -1032,7 +1032,20 @@ ggplot(data=fit_Lifestyle, aes(y=shares, x=rate_positive_words)) + geom_point()
 #EDA
 #starting point... correlation - shares vs. each var
 #every pairwise combo
-Lifestyle_corr <- cor(x=Lifestyle)
+Lifestyle_corr <- cor(x=Lifestyle %>% 
+                          select (shares, starts_with("weekday_is_") ) )
+
+# cor_mat <- cor(data %>% select(RentedBikeCount, Temperature, Humidity, WindSpeed,
+# Hour, Visibility, DewPointTemp,
+# Rainfall, Snowfall), method = "pearson")
+# corrplot(cor_mat, hc.order = TRUE,
+# type = "lower",
+# tl.pos = "lt",
+# title = "Correlation Coefficients for Bike Rental Data",
+# subtitle = "Correlation Coefficients for Bike Rental Data",
+# mar=c(0,0,2,0)
+# )
+
 #call Lifestyle_corr object to look at correlation between vars and shares response var
 #drop to keep in matrix and not turn into a vector
 shares_corr <- Lifestyle_corr[ ,"shares", drop=FALSE]
@@ -1050,20 +1063,17 @@ shares_corr_tibble <- bind_cols( var_names = rownames(shares_corr), shares_corr 
 shares_corr_tibble
 ```
 
-    # A tibble: 59 × 2
-       var_names                  shares
-       <chr>                       <dbl>
-     1 n_tokens_title           -0.00409
-     2 n_tokens_content          0.0730 
-     3 n_unique_tokens          -0.0297 
-     4 n_non_stop_words         -0.0279 
-     5 n_non_stop_unique_tokens -0.0139 
-     6 num_hrefs                 0.0536 
-     7 num_self_hrefs           -0.0164 
-     8 num_imgs                  0.0512 
-     9 num_videos                0.0883 
-    10 average_token_length     -0.0306 
-    # … with 49 more rows
+    # A tibble: 8 × 2
+      var_names              shares
+      <chr>                   <dbl>
+    1 shares                1      
+    2 weekday_is_monday     0.0318 
+    3 weekday_is_tuesday    0.0230 
+    4 weekday_is_wednesday -0.0273 
+    5 weekday_is_thursday  -0.00928
+    6 weekday_is_friday    -0.0305 
+    7 weekday_is_saturday   0.0132 
+    8 weekday_is_sunday     0.00406
 
 ``` r
 # condition on +/- 0.9 to see what we should remove as a predictor for the model
@@ -1074,36 +1084,9 @@ shares_corr_tibble
 rownames(shares_corr)
 ```
 
-     [1] "n_tokens_title"                "n_tokens_content"             
-     [3] "n_unique_tokens"               "n_non_stop_words"             
-     [5] "n_non_stop_unique_tokens"      "num_hrefs"                    
-     [7] "num_self_hrefs"                "num_imgs"                     
-     [9] "num_videos"                    "average_token_length"         
-    [11] "num_keywords"                  "data_channel_is_lifestyle"    
-    [13] "data_channel_is_entertainment" "data_channel_is_bus"          
-    [15] "data_channel_is_socmed"        "data_channel_is_tech"         
-    [17] "data_channel_is_world"         "kw_min_min"                   
-    [19] "kw_max_min"                    "kw_avg_min"                   
-    [21] "kw_min_max"                    "kw_max_max"                   
-    [23] "kw_avg_max"                    "kw_min_avg"                   
-    [25] "kw_max_avg"                    "kw_avg_avg"                   
-    [27] "self_reference_min_shares"     "self_reference_max_shares"    
-    [29] "self_reference_avg_sharess"    "weekday_is_monday"            
-    [31] "weekday_is_tuesday"            "weekday_is_wednesday"         
-    [33] "weekday_is_thursday"           "weekday_is_friday"            
-    [35] "weekday_is_saturday"           "weekday_is_sunday"            
-    [37] "is_weekend"                    "LDA_00"                       
-    [39] "LDA_01"                        "LDA_02"                       
-    [41] "LDA_03"                        "LDA_04"                       
-    [43] "global_subjectivity"           "global_sentiment_polarity"    
-    [45] "global_rate_positive_words"    "global_rate_negative_words"   
-    [47] "rate_positive_words"           "rate_negative_words"          
-    [49] "avg_positive_polarity"         "min_positive_polarity"        
-    [51] "max_positive_polarity"         "avg_negative_polarity"        
-    [53] "min_negative_polarity"         "max_negative_polarity"        
-    [55] "title_subjectivity"            "title_sentiment_polarity"     
-    [57] "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
-    [59] "shares"                       
+    [1] "shares"               "weekday_is_monday"    "weekday_is_tuesday"  
+    [4] "weekday_is_wednesday" "weekday_is_thursday"  "weekday_is_friday"   
+    [7] "weekday_is_saturday"  "weekday_is_sunday"   
 
 ``` r
 #checking structure and type of object
@@ -2175,4 +2158,4 @@ points on the project.
 • You should use Good Programming Practices when coding (see wolfware). If you do not follow GPP you can lose up to 40 points on the project.  
 • You should use appropriate markdown options/formatting (you can lose up to 20 points) for not doing so.
 -->
-<!-- code needed to render pdf file  -->
+<!-- code needed to render pdf file -->
