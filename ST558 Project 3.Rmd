@@ -159,7 +159,9 @@ Lifestyle <- OnlineNewsPopularity %>%
                filter(get(params$channel) == 1) %>%
                # removing non-predictive variables per dataset description
                # remove all data_channel_is_* variables because we already filtered on them and we do not want them included in the model!
-               select( ! c(url, timedelta, starts_with("data_channel_is_" ) ) )
+               #select( ! c(url, timedelta, starts_with("data_channel_is_" ) ) )
+                select( ! c(url, timedelta ) )
+
 
 #tidyverse way of looking at the dataset -- similar to str()
 #glimpse(Lifestyle)
