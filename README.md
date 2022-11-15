@@ -120,17 +120,17 @@ MORE ADDED LATER AS REQUIRED…
 
 <!-- 6 Links for the Rendered Files -->
 
-[Lifestyle articles is available here](Lifestyle_Summary.html)
+[Lifestyle articles is available here](./Lifestyle_Summary.html)
 
-[Entertainment articles is available here](Entertainment_Summary.html)
+[Entertainment articles is available here](./Entertainment_Summary.html)
 
-[Business articles is available here](Business_Summary.html)
+[Business articles is available here](./Business_Summary.html)
 
-[Social Media articles is available here](SocialMedia_Summary.html)
+[Social Media articles is available here](./SocialMedia_Summary.html)
 
-[Tech articles is available here](Tech_Summary.html)
+[Tech articles is available here](./Tech_Summary.html)
 
-[World articles is available here](World_Summary.html)
+[World articles is available here](./World_Summary.html)
 
 <!-- Render Code -->
 
