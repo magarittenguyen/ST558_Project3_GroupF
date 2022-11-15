@@ -1,9 +1,14 @@
 ---
-title: "ST558 Project 3 Group F"
+title: "ST558 Project 3"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+    df_print: tibble
 params:
-    channel: "data_channel_is_lifestyle"
+    channel: "data_channel_is_entertainment"
 ---
 
 <!-- testing automation form yaml header -->
