@@ -2,17 +2,17 @@
 title: "ST558 Project 3 Group F"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
-  params:
-    channel: NULL
-    label: ""
+params:
+    channel: "data_channel_is_lifestyle"
 ---
 
-```{r echo=FALSE, eval=FALSE}
-    #"data_channel_is_lifestyle", "data_channel_is_entertainment", "data_channel_is_bus", "data_channel_is_socmed", "data_channel_is_tech", "data_channel_is_world"
-
-    #"Lifestyle", "Entertainment", "Business", "Social Media", "Tech", "World"
-
+<!-- testing automation form yaml header -->
+<!-- it works -->
+```{r, echo=FALSE, eval=FALSE}
+params$channel
 ```
+
+
 
 <!-- 
 ############################################################# 
@@ -26,7 +26,6 @@ date: "2022-11-12"
 ```{r setup, include = FALSE}
 #global chunk options
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-
 #set seed for simulation reproducibility 
 set.seed(123)
 ```
@@ -135,18 +134,15 @@ Firstly, we read in the data using `read_csv()`.
 getwd()
 #reassign working directory
 #Magaritte's directory
-setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
+#setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
 #Matthew's directory
-#setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
-
+setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
 #read in data set .csv file in full
 #make sure that this is a relative path used...
 # ./ stays in the same file directory
 OnlineNewsPopularity<-read_csv("./OnlineNewsPopularity.csv", show_col_types = FALSE)
-
 #call object OnlineNewsPopularity - our full raw data
 OnlineNewsPopularity
-
 ```
 
 
@@ -161,14 +157,10 @@ Channel <- OnlineNewsPopularity %>%
                # remove all data_channel_is_* variables because we already filtered on them and we do not want them included in the model!
                #select( ! c(url, timedelta, starts_with("data_channel_is_" ) ) )
                 select( ! c(url, timedelta ) )
-
-
 #tidyverse way of looking at the dataset -- similar to str()
 #glimpse(Channel)
-
 #calling the Channel object to view
 Channel
-
 #testing
 #correct - we expect 2099 vars
 table(Channel[[params$channel]])
@@ -186,7 +178,6 @@ Note: A seed was set for reproducibility purposes.
 ``` {r, echo=TRUE, eval=TRUE}
 #seed is set for reproducibility 
 set.seed(123)
-
 #another way to split train and test data below
 # #indices to split on
 # train <- sample(1:nrow(my_heart), size = nrow(my_heart)*0.70)
@@ -194,13 +185,11 @@ set.seed(123)
 # #subset
 # heartTrain <- my_heart[train, ]
 # heartTest <- my_heart[test, ]
-
 #indices to split on
 ChannelIndex <- createDataPartition(Channel$shares, p = 0.70, list = FALSE)
 #subset
 ChannelTrain <- Channel[ ChannelIndex, ]
 ChannelTest  <- Channel[-ChannelIndex, ]
-
 ```
 
 
@@ -237,7 +226,6 @@ summary(ChannelTrain$weekday_is_sunday)
 summary(ChannelTrain$is_weekend)
 # 60. shares: Number of shares (target)
 summary(ChannelTrain$shares)
-
 #contigency tables
 # example: table (crabs$color, crabs$spine, crabs$y)
 # monday is the mot published articels... compare to diff of the week
@@ -245,8 +233,6 @@ table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_tuesday)
 table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_wednesday)
 table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_thursday)
 table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_friday)
-
-
 #sum stats for all 61 vars - not helpful...
 #Lifestlye_sumstats_Train <- summary(ChannelTrain)
 #calling Lifestlye_sumstats_Train object to see our summary stats
@@ -254,10 +240,8 @@ table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_friday)
 #check structure of objects
 #str(ChannelTrain)
 #str(Lifestlye_sumstats_Train)
-
 #plots include - scatter plots, correlation plots -- plots for continuous data...
 #do we need bar plots?
-
 #data for descriptive plots:
 plot_data_weekday_weekend <- ChannelTrain %>%
                                mutate ( weekday = case_when(
@@ -277,7 +261,6 @@ plot_data_weekday_weekend <- ChannelTrain %>%
                                                      "Sunday"),
                                           ordered = TRUE
                                           ) )
-
 #A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
 ggplot(data=plot_data_weekday_weekend, 
             aes(y=shares, x=weekday)) + 
@@ -286,15 +269,11 @@ ggplot(data=plot_data_weekday_weekend,
             geom_point(aes(color=weekday), position="jitter") 
 # when we take the log of the data, we can see easier... Poisson...
 # plot scatter after boxplot because we want to see where the majority of the dots are...
-
 #total articles published is actually higher Monday and fewer on the weekend. but boxplots look like they are lower on the weekdays because more articles are published but less shares are occurring...
-
-
 #plots - scatter plot with boxplot overlayed
 # 31. weekday_is_monday: Was the article published on a Monday?
 #this one doesnt work bc we need levels...
 #ggplot(data=ChannelTrain, aes(y=shares, x=weekday_is_monday)) + geom_point()
-
 # the y - axis is using a log axis not a linear axis, but the plots are more easily interpretable /  visually more ituitive with this transformation.
 ggplot(data=ChannelTrain %>% 
               mutate(weekday_fctr = factor(x=weekday_is_monday,  
@@ -359,11 +338,8 @@ ggplot(data=ChannelTrain %>%
 #             labs(x="Articles Published on Monday", y="Shares", color = "Published") +
 #             geom_boxplot() + scale_y_log10() +
 #             geom_point(aes(color=weekday_fctr), position="jitter") 
-
-
 # i can make conclusions based on summary() median, min, max, bc i trasfomred for visibility
   
-
                                
 ```
 The y - axis is using a log axis not a linear axis, but the plots are more easily interpretable / visually more intuitive with this transformation.The general shape of the plots is correct.
@@ -377,7 +353,6 @@ If you see a presence of outliers, this may cause the mean to shift in that dire
 ```{r, echo=TRUE, eval=TRUE}
 #what question are we trying to answer here? 
 # how to predict shares given the variables you have...
-
 #fitting the model
 fit_Channel <- lm(shares ~ . , data = Channel)
 #call fit_Lifestyle object - remember this is an lm object
@@ -385,19 +360,14 @@ fit_Channel
 # check fit_Lifestyle attributes
 attributes(fit_Channel)
 fit_Channel[["residuals"]]
-
 #summary stats for vars of interest - 
-
 plot(fit_Channel)
 ggplot(data=fit_Channel, aes(y=shares, x=rate_positive_words)) + geom_point()
-
-
 #EDA
 #starting point... correlation - shares vs. each var
 #every pairwise combo
 Channel_corr <- cor(x=Channel %>% 
                           select (shares, starts_with("weekday_is_") ) )
-
 # cor_mat <- cor(data %>% select(RentedBikeCount, Temperature, Humidity, WindSpeed,
 # Hour, Visibility, DewPointTemp,
 # Rainfall, Snowfall), method = "pearson")
@@ -408,7 +378,6 @@ Channel_corr <- cor(x=Channel %>%
 # subtitle = "Correlation Coefficients for Bike Rental Data",
 # mar=c(0,0,2,0)
 # )
-
 #call Channel_corr object to look at correlation between vars and shares response var
 #drop to keep in matrix and not turn into a vector
 shares_corr <- Channel_corr[ ,"shares", drop=FALSE]
@@ -419,44 +388,30 @@ is(shares_corr) #matrix with the drop=TRUE option
 shares_corr_tibble <- bind_cols( var_names = rownames(shares_corr), shares_corr ) 
 #call shares_corr_tibble object that has correlations with shares and vars...
 shares_corr_tibble
-
-
 # condition on +/- 0.9 to see what we should remove as a predictor for the model
-
-
 # call shares_corr_tibble object
 #shares_corr_tibble #this currently does not have row names...
 rownames(shares_corr)
-
 #checking structure and type of object
 #str(Channel_corr)
 #is(Channel_corr)
-
 #finds highly correlated variables and you can set a cutoff (default is +/ 0.9)
 #convert to tibble because using drylr chaining / piping
 corr_vars <- as.tibble ( Channel_corr[ ,"shares"] ) %>%
              filter ( abs(value) >= 0.9 )
-
 #dont need this anymore...
 #corr_vars <- findCorrelation(x=Can_corr, cutoff = +/- 0.9, verbose = TRUE, names = TRUE)
 #call corr_vars object
 #corr_vars
-
-
 #columns that are highly correlated and should be removed from the model
 #5 13 22
 # [1] "n_non_stop_unique_tokens"  "kw_max_min" "self_reference_max_shares"
-
-
-
 #response variable is shares, but what does that mean given certain variables available to us?
 #maybe look at days of the week variables?
 #figure out what kind of object we want to make to answer our question...
 #tibble keeping what kind of vars, matrix?
-
 #need to do some sort of type of EDA in order to see if variables are highly correlated
 #here we need to summary statistics via summary() and plots
-
 #this shows the summary stats for each variable in our dataset...
 Lifestlye_sumstats_Train <- summary(ChannelTrain)
 #calling Lifestlye_sumstats_Train object to see our summary stats
@@ -464,13 +419,10 @@ Lifestlye_sumstats_Train
 #check structure of objects
 str(ChannelTrain)
 str(Lifestlye_sumstats_Train)
-
 #plots include - scatter plots, correlation plots -- plots for continuous data...
 #do we need bar plots?
-
 #A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
 ggplot(data=ChannelTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
-
 ```
 <!-- You’ll be automating the creation of documents using R Markdown (one for each data_channel_is_* setting, i.e. type of article in the data set provided). Each document should be rendered as a github_document from a single .Rmd file. In the README.md file you should create links to each of the documents you will create (Lifestyle analysis, Entertainment analysis, etc.). Links can be made to the sub-documents using relative -->
 <!-- paths. For instance, if you have all of the outputted .md files in the main directory you would just use markdown linking: -->
@@ -514,10 +466,8 @@ l_m1 <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_video
               preProcess = c("center", "scale"),
               trControl = trainControl(method= "cv", number = 5))
 #l_m1
-
 #predicting on the ChannelTest data with linear regression model 1
 test_pred_l_m1 <- predict(l_m1, newdata = ChannelTest)
-
 #finding the best model - more explicit
 m1 <- postResample(test_pred_l_m1, ChannelTest$shares)
 m1
@@ -546,15 +496,14 @@ m1
 ```{r, echo=TRUE, eval=TRUE}
 #linear regression model 2
 l_m2 <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday +
-                       weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess,
+                       weekday_is_wednesday + weekday_is_thursday + weekday_is_friday +
+                       self_reference_avg_sharess,
               data = ChannelTrain, 
               method = "lm", 
               preProcess = c("center", "scale"),
               trControl = trainControl(method= "cv", number = 5))
-
 #predictions based on linear model 2 for the ChannelTest data
 test_pred_l_m2 <- predict(l_m2, newdata = ChannelTest)
-
 #best model chosen - RMSE reported explicity
 #goal is to compare RMSE and see which one is the lowest!
 m2 <- postResample(test_pred_l_m2, ChannelTest$shares)
@@ -580,20 +529,16 @@ For our random forest We model the number of shares by the selected independent 
 
 
 ```{r, echo=TRUE, eval=TRUE}
-r_f <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos +                            is_weekend , 
-             data = ChannelTrain,
-             method = "rf",
+r_f <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + 
+                      is_weekend , data = ChannelTrain, method = "rf",
+  
              trControl=trainControl(method = "cv", number = 5),
              preProcess = c("center", "scale"),
              tuneGrid = data.frame(mtry = 1:3))
-
 test_pred_r_f <- predict(r_f, newdata = ChannelTest)
-
 m3 <- postResample(test_pred_r_f, ChannelTest$shares)
 m3
-
 #bootstrapping will take some time...
-
 ```
 
 ## Boosted tree model
@@ -626,17 +571,12 @@ tune1<- c(25, 50, 100, 150, 200)
 tune2<- 1:4
 tune3<- 0.1
 tune4<- 10
-
-boosted <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday +
-                          weekday_is_wednesday + weekday_is_thursday + 
-                          weekday_is_friday + self_reference_avg_sharess, 
-                 data = ChannelTrain, method = "gbm",
-                 trControl=trainControl(method = "cv", number = 5),
-                 preProcess = c("center", "scale"),
-                 tuneGrid = expand.grid(n.trees = tune1, interaction.depth = tune2,                                             shrinkage = tune3, n.minobsinnode = tune4) )
-
+boosted <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday + weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess, 
+data = ChannelTrain, method = "gbm",
+ trControl=trainControl(method = "cv", number = 5),
+ preProcess = c("center", "scale"),
+ tuneGrid = expand.grid(n.trees = tune1, interaction.depth = tune2, shrinkage = tune3,    n.minobsinnode = tune4))
 test_pred_boosted <- predict(boosted, newdata = ChannelTest)
-
 m4 <- postResample(test_pred_boosted, ChannelTest$shares)
 m4
 ```
@@ -648,14 +588,10 @@ Next we do a comparison of the four models
 The `postResample()` function was used to calculate useful statistics such as rmse and R squared values for each one of the four models. We summarize them in the tibble below.
 
 ```{r, echo=TRUE, eval=TRUE}
-lm1 <- tibble(model = c("First Linear Regression"), RMSE = c(m1[[1]]), R2 = c(m1[[2]]))
-
-lm2 <- tibble(model = c("Second Linear Regression"), RMSE = c(m2[[1]]), R2 = c(m2[[2]]))
-
-rf  <- tibble(model = c("Random Forest"), RMSE = c(m3[[1]]), R2 = c(m3[[2]]))
-
+lm1 <- tibble(model = c("First linear regression"), RMSE = c(m1[[1]]), R2 = c(m1[[2]]))
+lm2 <- tibble(model = c("Second linear regression"), RMSE = c(m2[[1]]), R2 = c(m2[[2]]))
+rf <- tibble(model = c("Random Forest"), RMSE = c(m3[[1]]), R2 = c(m3[[2]]))
 Bos <- tibble(model = c("Boosting"), RMSE = c(m4[[1]]), R2 = c(m4[[2]]))
-
 RMSE_table <- rbind(lm1, lm2, rf, Bos)
 RMSE_table
 ```
@@ -668,14 +604,10 @@ R2 is a metric that tells us the proportion of the variance in the response vari
 From the table above the First linear regession model has the lowest RMSE and the hightest R2 and is therefore our winner.
 
 ```{r, echo=TRUE, eval=TRUE}
-
 #pick the smallest RMSE for the best model...
-
 final_result <- RMSE_table %>%
                 filter ( min(RMSE) == RMSE )
-
 final_result
-
 ```
 When comparing all 4 of our models, we are looking for the smallest value of RMSE to tell us which model is the best. In this situation, we can say that the smallest RMSE is `r final_result$RMSE` and this comes from the `r final_result$model` model.
 
@@ -786,7 +718,7 @@ If we see a negative trend then articles with more positive words tend to be sha
 Each group member is responsible for producing some summary statistics (means, sds, contingency tables, etc.) and for producing at least three graphs (each) of the data.
 
 # Modeling
-<!-- You’ll need to split the data into a training (70% of the data) and test set (30% of the data). Use set.seed() to make things reproducible. -->
+You’ll need to split the data into a training (70% of the data) and test set (30% of the data). Use set.seed() to make things reproducible.
 
 The goal is to create models for predicting the number of shares in some way. Each group member should contribute a linear regression model and an ensemble tree-based model. As we are automating things, describing the chosen model is tough, so no need to worry about that.
 
@@ -797,12 +729,12 @@ Prior to the models fit using linear regression, the first group member should p
 
 Prior to each ensemble model, you should provide a short but reasonably thorough explanation of the ensemble model you are using (so one for each group member).
 
-<!-- # Comparison -->
-<!-- All four of the models should be compared on the test set and a winner declared (this should be automated to be correct across all the created documents). -->
+# Comparison
+All four of the models should be compared on the test set and a winner declared (this should be automated to be correct across all the created documents).
 
-<!-- This can be done by one group member and the automation done by the other (see below). -->
+This can be done by one group member and the automation done by the other (see below).
 
-<!-- # Automation -->
+# Automation
 <!-- Once you’ve completed the above for a particular data channel, adapt the code so that you can use a parameter in your build process. You should be able to automatically generate an analysis report for each data_channel_is_* variable - although again, you may want to create a new variable to help with the subsetting. You’ll end up with six total outputted documents. -->
 
 <!-- This should be done by the group member that doesn’t automate the comparison of models part. -->
@@ -841,30 +773,6 @@ points on the project.
 #this code need to be copied and ran in the console to print out results
 #otherwise running from within the program doesn't print out every result
 #e.g. combo object and the final proportions tibble
-
-#Notes for Automation
-#might be able to just use lifestyle and then use paste function etc to simplify / minimize number of vectors needing to be created...
-
-#get create vector of channels 
-channel_options <- c("data_channel_is_lifestyle", "data_channel_is_entertainment", 
-                     "data_channel_is_bus", "data_channel_is_socmed", 
-                     "data_channel_is_tech", "data_channel_is_world" )
-label_options <-c("Lifestyle","Entertainment", "Business", "Social Media", "Tech",
-                  "World")
-
-#create filenames
-output_file <- paste0(label_options, ".md")
-
-#create a list for each team with just the team name parameter
-params = lapply(channel_options, FUN = function(x){list(channel = x)})
-
-#put into a data frame
-reports <- tibble(output_file, params)
-
-```
-
-
-```{r echo=FALSE, eval=FALSE}
 # 13. data_channel_is_lifestyle: Is data channel 'Lifestyle'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
@@ -874,7 +782,6 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                                          df_print = "tibble"), 
                    params = list(channel="data_channel_is_lifestyle", 
                                  label  ="Lifestyle" ))
-
 # 14. data_channel_is_entertainment: Is data channel 'Entertainment'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
@@ -884,7 +791,6 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                                          df_print = "tibble"), 
                    params = list(channel="data_channel_is_entertainment",
                                  label  ="Entertainment"))
-
 # 15. data_channel_is_bus: Is data channel 'Business'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
@@ -894,7 +800,6 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                                          df_print = "tibble"), 
                    params = list(channel="data_channel_is_bus",
                                  label  ="Business"))
-
 # 16. data_channel_is_socmed: Is data channel 'Social Media'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
@@ -904,7 +809,6 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                                          df_print = "tibble"), 
                    params = list(channel="data_channel_is_socmed", 
                                  label  ="Social Media"))
-
 # 17. data_channel_is_tech: Is data channel 'Tech'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
@@ -914,7 +818,6 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                                          df_print = "tibble"), 
                    params = list(channel="data_channel_is_tech",
                                  label  ="Tech"))
-
 # 18. data_channel_is_world: Is data channel 'World'?
 rmarkdown:: render("ST558 Project 3.Rmd",
                    output_format = "github_document",
@@ -924,10 +827,7 @@ rmarkdown:: render("ST558 Project 3.Rmd",
                                          df_print = "tibble"), 
                    params = list(channel="data_channel_is_world",
                                  label  ="World"))
-
-
 #directions - save, commit, push, pull
-
  # - save 
  # - knit file via button (see the changes made in a url page html)
  # - render in the console with code above
