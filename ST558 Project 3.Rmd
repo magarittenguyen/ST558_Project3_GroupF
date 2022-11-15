@@ -2,8 +2,8 @@
 title: "ST558 Project 3 Group F"
 author: "Magaritte Nguyen and Matthew Sookoo"
 date: "2022-11-12"
-# params:
-#    channel: "data_channel_is_lifestyle"
+params:
+    channel: "data_channel_is_lifestyle"
 ---
 
 <!-- testing automation form yaml header -->
@@ -137,9 +137,9 @@ Firstly, we read in the data using `read_csv()`.
 getwd()
 #reassign working directory
 #Magaritte's directory
-setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
+#setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
 #Matthew's directory
-#setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
+setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
 
 #read in data set .csv file in full
 #make sure that this is a relative path used...
