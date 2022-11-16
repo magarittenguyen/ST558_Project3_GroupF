@@ -5,27 +5,16 @@ date: "2022-11-12"
 output: 
   github_document:
     toc: true
-    toc_depth: 3
+    toc_depth: 6
     df_print: tibble
 params:
     channel: "data_channel_is_lifestyle"
 ---
 
-<!-- testing automation form yaml header -->
-<!-- it works -->
+
 ```{r, echo=FALSE, eval=FALSE}
 params$channel
 ```
-
-
-
-<!-- 
-############################################################# 
-#############################################################
-### Project 3 Group F
-############################################################# 
-############################################################# 
--->
 
 <!-- setup -->
 ```{r setup, include = FALSE}
@@ -96,7 +85,7 @@ The following packages are used for our data manipulation, prediction, etc.:
 * `caret`: Used for predictive modelling.
 * `shiny`: makes it easy to build interactive web apps straight from R
 * `rmarkdown`: create dynamic analysis documents that combine codes and rendered output
-* `corrplot` : 
+* `corrplot` : corrplot provides a visual exploratory tool on correlation matrix
 
 
 <!-- packages that we installed and are calling via library() function -->
@@ -141,7 +130,7 @@ Channel <- OnlineNewsPopularity %>%
 #calling the Channel object to view
 Channel
 #testing
-#correct - we expect 2099 vars
+#correct - we expect 2099 vars for lifestyle
 table(Channel[[params$channel]])
 ```
 
@@ -161,18 +150,6 @@ ChannelIndex <- createDataPartition(Channel$shares, p = 0.70, list = FALSE)
 ChannelTrain <- Channel[ ChannelIndex, ]
 ChannelTest  <- Channel[-ChannelIndex, ]
 ```
-
-
-
-<!-- You should produce some basic (but meaningful) summary statistics and plots about the training data you are working with (especially as it relates to your response). -->
-
-<!-- As you will automate this same analysis across other data, you can’t describe the trends you see in the graph (unless you want to try to automate that!). You should describe what to look for in the summary statistics/plots to help the reader understand the summary or graph. Ex: A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created: -->
-
-<!-- 'We can inspect the trend of shares as a function of the positive word rate. If the points -->
-<!-- show an upward trend, then articles with more positive words tend to be shared more often. -->
-<!-- If we see a negative trend then articles with more positive words tend to be shared less often.' -->
-
-<!-- Each group member is responsible for producing some summary statistics (means, sds, contingency tables, etc.) and for producing at least three graphs (each) of the data. -->
 
 We begin by doing some exploratory data analysis(EDA). It should be noted that for the following EDA and summaries we use our training data.
 
@@ -270,23 +247,23 @@ Next we use the `summary()` function on some more of our variables of interest t
 
 
 ```{r, echo=TRUE, eval=TRUE}
-# 31. weekday_is_monday: Was the article published on a Monday?
+#weekday_is_monday: Was the article published on a Monday?
 summary(ChannelTrain$weekday_is_monday)
-# 32. weekday_is_tuesday: Was the article published on a Tuesday?
+#weekday_is_tuesday: Was the article published on a Tuesday?
 summary(ChannelTrain$weekday_is_tuesday)
-# 33. weekday_is_wednesday: Was the article published on a Wednesday?
+#weekday_is_wednesday: Was the article published on a Wednesday?
 summary(ChannelTrain$weekday_is_wednesday)
-# 34. weekday_is_thursday: Was the article published on a Thursday?
+#weekday_is_thursday: Was the article published on a Thursday?
 summary(ChannelTrain$weekday_is_thursday)
-# 35. weekday_is_friday: Was the article published on a Friday?
+#weekday_is_friday: Was the article published on a Friday?
 summary(ChannelTrain$weekday_is_friday)
-# 36. weekday_is_saturday: Was the article published on a Saturday?
+#weekday_is_saturday: Was the article published on a Saturday?
 summary(ChannelTrain$weekday_is_saturday)
-# 37. weekday_is_sunday: Was the article published on a Sunday?
+#weekday_is_sunday: Was the article published on a Sunday?
 summary(ChannelTrain$weekday_is_sunday)
-# 38. is_weekend: Was the article published on the weekend? 
+#is_weekend: Was the article published on the weekend? 
 summary(ChannelTrain$is_weekend)
-# 60. shares: Number of shares (target)
+#shares: Number of shares (target)
 summary(ChannelTrain$shares)
 
 ```
@@ -328,8 +305,6 @@ table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_sunday)
 Next let us examime the number of shares for the different days of the week using a contingency table and a bar plot
 
 ```{r}
-# Magaritte EXPLAIN THIS
-
 plot_data_weekday_weekend <- ChannelTrain %>%
                                mutate ( weekday = case_when(
                                           weekday_is_monday    == 1 ~ "Monday"   ,
@@ -353,7 +328,8 @@ table(plot_data_weekday_weekend$weekday)
 
 ggplot(data = plot_data_weekday_weekend, aes(x = weekday)) + 
   geom_bar(aes(fill= weekday)) + 
-  ggtitle("Number of shares during the week")
+  ggtitle("Number of shares during the week") +
+  labs(x="Weekday", y="Shares")
 
 ```
 
@@ -362,23 +338,12 @@ Both the contingency tables and bar plot above concur that most of the articles 
 Next we create some box plots.
 ```{r}
 
-
-
-
-#A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
 ggplot(data=plot_data_weekday_weekend, 
             aes(y=shares, x=weekday)) + 
             labs(x="Articles Published on Certain Days of the Week", y="Shares") +
             geom_boxplot() + scale_y_log10() +
             geom_point(aes(color=weekday), position="jitter") 
-# when we take the log of the data, we can see easier... Poisson...
-# plot scatter after boxplot because we want to see where the majority of the dots are...
-#total articles published is actually higher Monday and fewer on the weekend. but boxplots look like they are lower on the weekdays because more articles are published but less shares are occurring...
-#plots - scatter plot with boxplot overlayed
-# 31. weekday_is_monday: Was the article published on a Monday?
-#this one doesnt work bc we need levels...
-#ggplot(data=ChannelTrain, aes(y=shares, x=weekday_is_monday)) + geom_point()
-# the y - axis is using a log axis not a linear axis, but the plots are more easily interpretable /  visually more ituitive with this transformation.
+
 ggplot(data=ChannelTrain %>% 
               mutate(weekday_fctr = factor(x=weekday_is_monday,  
               levels=c(0,1), labels = c("No", "Yes"))), 
@@ -386,7 +351,8 @@ ggplot(data=ChannelTrain %>%
             labs(x="Articles Published on Monday", y="Shares", color = "Published") +
             geom_boxplot() + scale_y_log10() +
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
-# 32. weekday_is_tuesday: Was the article published on a Tuesday
+
+#weekday_is_tuesday: Was the article published on a Tuesday
 ggplot(data=ChannelTrain %>% 
               mutate(weekday_fctr = factor(x=weekday_is_tuesday,  
               levels=c(0,1), labels = c("No", "Yes"))), 
@@ -394,7 +360,8 @@ ggplot(data=ChannelTrain %>%
             labs(x="Articles Published on Tuesday", y="Shares", color = "Published") +
             geom_boxplot() + scale_y_log10() +
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
-# 33. weekday_is_wednesday: Was the article published on a Wednesday?
+
+#weekday_is_wednesday: Was the article published on a Wednesday?
 ggplot(data=ChannelTrain %>% 
               mutate(weekday_fctr = factor(x=weekday_is_wednesday,  
               levels=c(0,1), labels = c("No", "Yes"))), 
@@ -402,7 +369,8 @@ ggplot(data=ChannelTrain %>%
             labs(x="Articles Published on Wednesday", y="Shares", color = "Published") +
             geom_boxplot() + scale_y_log10() +
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
-# 34. weekday_is_thursday: Was the article published on a Thursday?
+
+#weekday_is_thursday: Was the article published on a Thursday?
 ggplot(data=ChannelTrain %>% 
               mutate(weekday_fctr = factor(x=weekday_is_thursday,  
               levels=c(0,1), labels = c("No", "Yes"))), 
@@ -410,7 +378,8 @@ ggplot(data=ChannelTrain %>%
             labs(x="Articles Published on Thursday", y="Shares", color = "Published") +
             geom_boxplot() + scale_y_log10() +
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
-# 35. weekday_is_friday: Was the article published on a Friday?
+
+#weekday_is_friday: Was the article published on a Friday?
 ggplot(data=ChannelTrain %>% 
               mutate(weekday_fctr = factor(x=weekday_is_friday,  
               levels=c(0,1), labels = c("No", "Yes"))), 
@@ -418,7 +387,8 @@ ggplot(data=ChannelTrain %>%
             labs(x="Articles Published on Friday", y="Shares", color = "Published") +
             geom_boxplot() + scale_y_log10() +
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
-# 36. weekday_is_saturday: Was the article published on a Saturday?
+
+#weekday_is_saturday: Was the article published on a Saturday?
 ggplot(data=ChannelTrain %>% 
               mutate(weekday_fctr = factor(x=weekday_is_saturday,  
               levels=c(0,1), labels = c("No", "Yes"))), 
@@ -426,7 +396,8 @@ ggplot(data=ChannelTrain %>%
             labs(x="Articles Published on Saturday", y="Shares", color = "Published") +
             geom_boxplot() + scale_y_log10() +
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
-# 37. weekday_is_sunday: Was the article published on a Sunday?
+
+#weekday_is_sunday: Was the article published on a Sunday?
 ggplot(data=ChannelTrain %>% 
               mutate(weekday_fctr = factor(x=weekday_is_sunday,  
               levels=c(0,1), labels = c("No", "Yes"))), 
@@ -434,18 +405,8 @@ ggplot(data=ChannelTrain %>%
             labs(x="Articles Published on Sunday", y="Shares", color = "Published") +
             geom_boxplot() + scale_y_log10() +
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
-# # 38. is_weekend: Was the article published on the weekend? 
-# ggplot(data=ChannelTrain %>% 
-#               mutate(weekday_fctr = factor(x=is_weekend,  
-#               levels=c(0,1), labels = c("No", "Yes"))), 
-#             aes(y=shares, x=weekday_fctr)) + 
-#             labs(x="Articles Published on Monday", y="Shares", color = "Published") +
-#             geom_boxplot() + scale_y_log10() +
-#             geom_point(aes(color=weekday_fctr), position="jitter") 
-# i can make conclusions based on summary() median, min, max, bc i trasfomred for visibility
-  
-                               
 ```
+
 The y - axis is using a log axis not a linear axis, but the plots are more easily interpretable / visually more intuitive with this transformation.The general shape of the plots is correct.
 
 We can inspect the trend of shares as a function of the different days of the week that the articles are published. 
@@ -523,20 +484,7 @@ Lifestlye_sumstats_Train
 #check structure of objects
 str(ChannelTrain)
 str(Lifestlye_sumstats_Train)
-#plots include - scatter plots, correlation plots -- plots for continuous data...
-#do we need bar plots?
-#A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
-#ggplot(data=ChannelTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
 ```
-<!-- You’ll be automating the creation of documents using R Markdown (one for each data_channel_is_* setting, i.e. type of article in the data set provided). Each document should be rendered as a github_document from a single .Rmd file. In the README.md file you should create links to each of the documents you will create (Lifestyle analysis, Entertainment analysis, etc.). Links can be made to the sub-documents using relative -->
-<!-- paths. For instance, if you have all of the outputted .md files in the main directory you would just use markdown linking: -->
-
-<!-- - The analysis for [Lifestyle articles is available here](LifestyleAnalysis.html). Note we -->
-<!-- link to the html file even though the file we create is a .md file - github creates the .html for us. -->
-
-<!-- In the repo’s README.md file (which doesn’t need to be created from a .Rmd file, just use the one you initialize into the repo if you want) give a brief description of the purpose of the repo, a list of R packages used, links to the generated analyses, and the code used to create the analyses from a single .Rmd file (i.e. the render() code). -->
-
-
 
 
 
@@ -548,43 +496,50 @@ Two models will be multiple linear regression models, one will be a random fores
 
 We firstly give a brief explanation of a linear regression model.
 
-A Linear regression model is a supervised learning technique that is used to predict the value of a variable based on the value of other variable(s). The variable you want to predict is called the dependent variable or the response. The variable(s) you are using to predict is called the independent variable(s) or the predictor(s). 
+Linear regression is a supervised learning technique that uses a linear approach for modelling the relationship between a scalar response (dependent variable) and one or more predictor variables (independent variables). 
+
+The case of one predictor variable is called simple linear regression and the case where there are more than one predictor variables is called multiple linear regression.
+
+Linear regression models are fitted to the data by minimizing the sum of squared residuals.
 
 
 ## First linear model.
 
- We model the number of shares by the selected independent variables
+We model the number of shares using multiple linear regression, summarize and predict on the testing data. and use the `postResample()` function to get useful metrics. The selected independent variables for this model are;
  
 * "n_tokens_title" (Number of words in the title),
 
 * "n_tokens_content" (Number of words in the content)
 
-* "num_imgs" (Number of images)
+* "num_imgs" (Number of images) : we use the square of this variable
 
-* "num_videos" (Number of videos)
+* "num_videos" (Number of videos) : we use the square of this variable
 
 * "is_weekend" (Was the article published on the weekend?)
 
 
 ```{r, echo=TRUE, eval=TRUE}
 #linear regression model 1
-l_m1 <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + 
-                       is_weekend, 
+l_m1 <- train(shares ~ n_tokens_title +  n_tokens_content + I(num_imgs^2) + I(num_videos^2) + is_weekend, 
               data = ChannelTrain, 
               method = "lm", 
               preProcess = c("center", "scale"),
               trControl = trainControl(method= "cv", number = 5))
-#l_m1
+l_m1
+
+#summaries
+summary(l_m1)
 #predicting on the ChannelTest data with linear regression model 1
 test_pred_l_m1 <- predict(l_m1, newdata = ChannelTest)
-#finding the best model - more explicit
+#best model chosen - RMSE reported explicity
+#goal is to compare RMSE and see which one is the lowest!
 m1 <- postResample(test_pred_l_m1, ChannelTest$shares)
 m1
 ```
 
 ## Second linear model
 
- We model the number of shares by the selected independent variables
+We model the number of shares using multiple linear regression, summarize and predict on the testing data. and use the `postResample()` function to get useful metrics. The selected independent variables for this model are;
 
 * "num_hrefs" (Number of links)
 
@@ -611,6 +566,12 @@ l_m2 <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday +
               method = "lm", 
               preProcess = c("center", "scale"),
               trControl = trainControl(method= "cv", number = 5))
+
+l_m2
+
+#summaries
+summary(l_m2)
+
 #predictions based on linear model 2 for the ChannelTest data
 test_pred_l_m2 <- predict(l_m2, newdata = ChannelTest)
 #best model chosen - RMSE reported explicity
@@ -626,37 +587,48 @@ The idea behind the random forest model is the same as bagging but we use a rand
 
 For our random forest We model the number of shares by the selected independent variables
  
-* "n_tokens_title" (Number of words in the title),
+* "num_hrefs" (Number of links)
 
 * "n_tokens_content" (Number of words in the content)
 
-* "num_imgs" (Number of images)
-
-* "num_videos" (Number of videos)
+* "num_videos" (Number of videos) 
 
 * "is_weekend" (Was the article published on the weekend?)
 
 
 ```{r, echo=TRUE, eval=TRUE}
-r_f <- train(shares ~ n_tokens_title +  n_tokens_content + num_imgs + num_videos + 
-                      is_weekend , data = ChannelTrain, method = "rf",
+r_f <- train(shares ~ num_hrefs +  n_tokens_content + num_videos + 
+                      is_weekend, data = ChannelTrain, method = "rf",
   
              trControl=trainControl(method = "cv", number = 5),
              preProcess = c("center", "scale"),
              tuneGrid = data.frame(mtry = 1:3))
+
+r_f
+
 test_pred_r_f <- predict(r_f, newdata = ChannelTest)
+
 m3 <- postResample(test_pred_r_f, ChannelTest$shares)
 m3
-#bootstrapping will take some time...
 ```
 
 ## Boosted tree model
 
-The idea behind the boosting tree model is to train our tree slowly in a sequential manner so each tree that is created will be based on the previous one with predictions updated. 
+The idea behind the boosting tree model is to train our tree slowly in a sequential manner so each tree that is created will be based on the previous one with predictions updated. More formally, boosting (for regression trees) involves
+
+* Initializing predictions
+
+* Finding the residuals
+
+* Fit a tree with (say) d splits (d+1 terminal nodes) treating the residuals as the response
+
+* Update predictions
+
+* Update residuals for new prediction and repeat.
 
 For our boosting tree we model the number of shares by the selected independent variables
 
-* "num_hrefs" (Number of links)
+* "num_imgs" (Number of images)
 
 * "weekday_is_monday" (Was the article published on a Monday?)
 
@@ -671,21 +643,25 @@ For our boosting tree we model the number of shares by the selected independent 
 * "self_reference_avg_sharess" (Avg. shares of referenced articles in Mashable)
 
 Additionally we choose to use all combinations of the tuning parameters
-n.trees = c(25, 50, 100, 150, 200), interaction.depth = 1:4, shrinkage = 0.1 and   n.minobsinnode = 10.
+n.trees = 50, interaction.depth = 1, shrinkage = 0.1 and   n.minobsinnode = 10.
 
 
 
 ```{r, echo=TRUE, eval=TRUE}
-tune1<- c(25, 50, 100, 150, 200)
-tune2<- 1:4
+tune1<- 50
+tune2<- 1
 tune3<- 0.1
 tune4<- 10
-boosted <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday + weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess, 
+boosted <- train(shares ~ num_imgs + weekday_is_monday + weekday_is_tuesday + weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess, 
 data = ChannelTrain, method = "gbm",
  trControl=trainControl(method = "cv", number = 5),
  preProcess = c("center", "scale"),
  tuneGrid = expand.grid(n.trees = tune1, interaction.depth = tune2, shrinkage = tune3,    n.minobsinnode = tune4))
+
+boosted
+
 test_pred_boosted <- predict(boosted, newdata = ChannelTest)
+
 m4 <- postResample(test_pred_boosted, ChannelTest$shares)
 m4
 ```
@@ -710,7 +686,7 @@ RMSE is a metric that tells us how far apart the predicted values are from the o
 
 R2 is a metric that tells us the proportion of the variance in the response variable of a regression model that can be explained by the predictor variables. This value ranges from 0 to 1. The higher the R2 value, the better a model fits a dataset.
 
-From the table above the First linear regession model has the lowest RMSE and the hightest R2 and is therefore our winner.
+We will use RMSE to pick our winner.
 
 ```{r, echo=TRUE, eval=TRUE}
 #pick the smallest RMSE for the best model...
@@ -718,6 +694,7 @@ final_result <- RMSE_table %>%
                 filter ( min(RMSE) == RMSE )
 final_result
 ```
+
 When comparing all 4 of our models, we are looking for the smallest value of RMSE to tell us which model is the best. In this situation, we can say that the smallest RMSE is `r final_result$RMSE` and this comes from the `r final_result$model` model.
 
 
