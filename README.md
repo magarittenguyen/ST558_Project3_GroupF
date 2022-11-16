@@ -120,79 +120,53 @@ MORE ADDED LATER AS REQUIRED…
 
 <!-- 6 Links for the Rendered Files -->
 
-[Lifestyle articles is available here](./Lifestyle_Summary.md)
+[Lifestyle articles is available here](./Lifestyle_Summary.html)
 
-[Entertainment articles is available here](./Entertainment_Summary.md)
+[Entertainment articles is available here](./Entertainment_Summary.html)
 
-[Business articles is available here](./Business_Summary.md)
+[Business articles is available here](./Business_Summary.html)
 
-[Social Media articles is available here](./SocialMedia_Summary.md)
+[Social Media articles is available here](./SocialMedia_Summary.html)
 
-[Tech articles is available here](./Tech_Summary.md)
+[Tech articles is available here](./Tech_Summary.html)
 
-[World articles is available here](./World_Summary.md)
+[World articles is available here](./World_Summary.html)
 
 <!-- Render Code -->
 
 ```r
-# 13. data_channel_is_lifestyle: Is data channel 'Lifestyle'?
-rmarkdown:: render("ST558 Project 3.Rmd",
-                   output_format = "github_document",
-                   output_file = "Lifestyle_Summary.md",
-                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
-                                         toc = TRUE, toc_depth = "6", 
-                                         df_print = "tibble"), 
-                   params = list(channel="data_channel_is_lifestyle", 
-                                 label  ="Lifestyle" ))
+#THIS IS THE AUTOMATION CODE BELOW!!!
+#dr.post way - automation
+#list of channels and lables i want for my summary / usable vars in report
+channel_list <- c("data_channel_is_lifestyle", "data_channel_is_entertainment", "data_channel_is_bus", "data_channel_is_socmed", "data_channel_is_tech", "data_channel_is_world")
+is(channel_list)
 
-# 14. data_channel_is_entertainment: Is data channel 'Entertainment'?
-rmarkdown:: render("ST558 Project 3.Rmd",
-                   output_format = "github_document",
-                   output_file = "Entertainment_Summary.md",
-                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
-                                         toc = TRUE, toc_depth = "6", 
-                                         df_print = "tibble"), 
-                   params = list(channel="data_channel_is_entertainment",
-                                 label  ="Entertainment"))
+label_list <- c("Lifestyle", "Entertainment", "Business", "Social Media", "Tech", 
+                "World") 
+is(label_list)
+#name for .md files
+md_file <- paste0(str_replace_all(label_list, " ", ""), "_Summary.md")
+is(md_file)
 
-# 15. data_channel_is_bus: Is data channel 'Business'?
-rmarkdown:: render("ST558 Project 3.Rmd",
-                   output_format = "github_document",
-                   output_file = "Business_Summary.md",
-                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
-                                         toc = TRUE, toc_depth = "6", 
-                                         df_print = "tibble"), 
-                   params = list(channel="data_channel_is_bus",
-                                 label  ="Business"))
+p <- lapply( 1:length(channel_list), FUN = function(x) { 
+                                             list(channel = channel_list[x],
+                                                     label= label_list[x] )  
+  } #end of the function(x)
+  ) #end of the lapply()
 
-# 16. data_channel_is_socmed: Is data channel 'Social Media'?
-rmarkdown:: render("ST558 Project 3.Rmd",
-                   output_format = "github_document",
-                   output_file = "SocialMedia_Summary.md",
-                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
-                                         toc = TRUE, toc_depth = "6", 
-                                         df_print = "tibble"), 
-                   params = list(channel="data_channel_is_socmed", 
-                                 label  ="Social Media"))
+reports <- tibble(md_file, p)
+reports
 
-# 17. data_channel_is_tech: Is data channel 'Tech'?
-rmarkdown:: render("ST558 Project 3.Rmd",
-                   output_format = "github_document",
-                   output_file = "Tech_Summary.md",
-                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
-                                         toc = TRUE, toc_depth = "6", 
-                                         df_print = "tibble"), 
-                   params = list(channel="data_channel_is_tech",
-                                 label  ="Tech"))
+apply(reports, MARGIN = 1,
+      FUN = function(x){
+        rmarkdown::render(input = "ST558 Project 3.Rmd",
+                          output_format = "github_document",
+                          output_file = x[[1]], 
+                          output_options = list(html_preview = FALSE, keep_html = FALSE,
+                                                toc = TRUE, toc_depth = "6", 
+                                                df_print = "tibble"), 
+                          params = x[[2]])
+      }) #end of function and apply()
 
-# 18. data_channel_is_world: Is data channel 'World'?
-rmarkdown:: render("ST558 Project 3.Rmd",
-                   output_format = "github_document",
-                   output_file = "World_Summary.md",
-                   output_options = list(html_preview = FALSE, keep_html = FALSE, 
-                                         toc = TRUE, toc_depth = "6", 
-                                         df_print = "tibble"), 
-                   params = list(channel="data_channel_is_world",
-                                 label  ="World"))
 ```
 
