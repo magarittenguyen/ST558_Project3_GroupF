@@ -1,14 +1,15 @@
 ---
-title: "ST558 Project 3 Group F"
-author: "Magaritte Nguyen and Matthew Sookoo"
+title: "ST558 Project 3 Group F: `r params$label` Summary Report"
+author: "Magaritte Nguyen & Matthew Sookoo"
 date: "2022-11-12"
 output: 
   github_document:
     toc: true
-    toc_depth: 3
+    toc_depth: 6
     df_print: tibble
-params:
-    channel: "data_channel_is_entertainment"
+params: 
+  channel: "data_channel_is_lifestyle" 
+  label: "Lifestyle"
 ---
 
 <!-- testing automation form yaml header -->
@@ -16,8 +17,6 @@ params:
 ```{r, echo=FALSE, eval=FALSE}
 params$channel
 ```
-
-
 
 <!-- 
 ############################################################# 
@@ -141,7 +140,7 @@ getwd()
 #Magaritte's directory
 #setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
 #Matthew's directory
-setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
+#setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
 #read in data set .csv file in full
 #make sure that this is a relative path used...
 # ./ stays in the same file directory
@@ -389,7 +388,7 @@ shares_corr <- Channel_corr[ ,"shares", drop=FALSE]
 #shares_corr <- Channel_corr[ ,"shares"]
 is(shares_corr) #matrix with the drop=TRUE option
 #convert to tibble
-#shares_corr_tibble <- as.tibble(shares_corr)
+#shares_corr_tibble <- as_tibble(shares_corr)
 shares_corr_tibble <- bind_cols( var_names = rownames(shares_corr), shares_corr ) 
 #call shares_corr_tibble object that has correlations with shares and vars...
 shares_corr_tibble
@@ -402,7 +401,7 @@ rownames(shares_corr)
 #is(Channel_corr)
 #finds highly correlated variables and you can set a cutoff (default is +/ 0.9)
 #convert to tibble because using drylr chaining / piping
-corr_vars <- as.tibble ( Channel_corr[ ,"shares"] ) %>%
+corr_vars <- as_tibble ( Channel_corr[ ,"shares"] ) %>%
              filter ( abs(value) >= 0.9 )
 #dont need this anymore...
 #corr_vars <- findCorrelation(x=Can_corr, cutoff = +/- 0.9, verbose = TRUE, names = TRUE)
@@ -576,11 +575,16 @@ tune1<- c(25, 50, 100, 150, 200)
 tune2<- 1:4
 tune3<- 0.1
 tune4<- 10
-boosted <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday + weekday_is_wednesday + weekday_is_thursday + weekday_is_friday + self_reference_avg_sharess, 
-data = ChannelTrain, method = "gbm",
- trControl=trainControl(method = "cv", number = 5),
- preProcess = c("center", "scale"),
- tuneGrid = expand.grid(n.trees = tune1, interaction.depth = tune2, shrinkage = tune3,    n.minobsinnode = tune4))
+
+boosted <- train(shares ~ num_hrefs + weekday_is_monday + weekday_is_tuesday + 
+                          weekday_is_wednesday + weekday_is_thursday + weekday_is_friday
+                          + self_reference_avg_sharess, 
+                 data = ChannelTrain, method = "gbm",
+                 trControl=trainControl(method = "cv", number = 5),
+                 preProcess = c("center", "scale"),
+                 tuneGrid = expand.grid(n.trees = tune1, interaction.depth = tune2, 
+                 shrinkage = tune3,    n.minobsinnode = tune4))
+
 test_pred_boosted <- predict(boosted, newdata = ChannelTest)
 m4 <- postResample(test_pred_boosted, ChannelTest$shares)
 m4
