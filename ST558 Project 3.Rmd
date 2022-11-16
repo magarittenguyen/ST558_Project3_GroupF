@@ -8,7 +8,7 @@ output:
     toc_depth: 3
     df_print: tibble
 params:
-    channel: "data_channel_is_entertainment"
+    channel: "data_channel_is_lifestyle"
 ---
 
 <!-- testing automation form yaml header -->
@@ -37,33 +37,20 @@ set.seed(123)
 
 # Introduction 
 
-Our goal with this project is to take the data about articles published by Mashable (www.mashable.com) and create predictive models for the number of shares in social networks (popularity) then automating our Markdown reports. This dataset summarizes a heterogeneous set of features in a period of two years. 
+Our goal with this project is to take the data about articles published by [Mashable](https://www.mashable.com) and create predictive models for the number of shares in social networks (popularity) then automating our Markdown reports. 
 
-The way we will summarize the data and try to predict the number of shares is via linear regression, random forest, and boosting (will add more later)
+This dataset summarizes a heterogeneous set of features in a period of two years. 
 
-- briefly describes the data and the variables you have to work with (just discuss the ones you want to use). 
-- Your target variables is the shares variable.
-- mention the purpose of your analysis and the methods you’ll use to model the response.
+Then we will summarize the data and try to predict the number of shares is two via linear regression models, a random forest model, and a boosting model. Lastly we will compare the four models and declare a winner (the model with the lowest root mean squared error).  
 
-- You’ll describe those in more detail later.
+The dataset we will be using is [Online News Popularity Data Set](https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity).
 
-Data Set Information:
-
-* The articles were published by Mashable (www.mashable.com) and their content as the rights to reproduce it belongs to them. Hence, this dataset does not share the original content but some statistics associated with it. The original content be publicly accessed and retrieved using the provided urls.
-
-* Acquisition date: January 8, 2015
-
-* The estimated relative performance values were estimated by the authors using a Random Forest classifier and a rolling windows as assessment method. See their article for more details on how the relative performance values were set.
-
-
-Our goal with this project is to create predictive models and automating Markdown reports. 
-We are using this [Online News Popularity Data Set](https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity).
-
-This dataset summarizes a heterogeneous set of features about articles published by [Mashable](http://www.mashable.com) in a period of two years. 
 
 ## More about the variables
 
-The data contains 39644 observations and 61 variables (58 predictive attributes, 2 non-predictive, 1 goal field) and we are interested in the number of shares of the online news. We only mention the one we use in our project.
+The data contains 61 variables (58 predictive attributes, 2 non-predictive, 1 goal field) and we are interested in the number of shares (goal) of the online news. 
+
+We only mention the variables we use in our project.
 
 ### Response variable 
 
@@ -101,17 +88,16 @@ The data contains 39644 observations and 61 variables (58 predictive attributes,
 
 
 
-
 # Required Packages
 
 The following packages are used for our data manipulation, prediction, etc.:
 
 * `tidyverse`: Tons of useful features for data manipulation and visualization!
 * `caret`: Used for predictive modelling.
-* `shiny`
-* `rmarkdown`
+* `shiny`: makes it easy to build interactive web apps straight from R
+* `rmarkdown`: create dynamic analysis documents that combine codes and rendered output
+* `corrplot` : 
 
-MORE ADDED LATER AS REQUIRED...
 
 <!-- packages that we installed and are calling via library() function -->
 ```{r libraries, include = FALSE}
@@ -120,6 +106,7 @@ library(stringr)
 library(caret)
 library(shiny)
 library(rmarkdown)
+library(corrplot)
 ```
 
 
@@ -127,31 +114,18 @@ library(rmarkdown)
 
 ## Reading in the data
 
-Read in the OnlineNewsPopularity.csv data file -- subset for `r params$channel`: Is data channel '`r str_to_title(params$label)`'?
-<!-- str_to_title("social media") ->> "Social Media" -->
-
-Here, `read_csv()` is used to read in the OnlineNewsPopularity.csv data and we are subsetting for the `r params$channel`: Is data channel '`r str_to_title(params$label)`'? variable. 
-
-Firstly, we read in the data using `read_csv()`.
+Firstly we set up a relative path, then We read in the OnlineNewsPopularity.csv data file found [here](https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity) using `read_csv()`.
 
 ```{r, echo=TRUE, eval=TRUE}
-#check working directory
 getwd()
-#reassign working directory
-#Magaritte's directory
-#setwd("D:/ST558/Project 3/ST558_Project3_GroupF")
-#Matthew's directory
-setwd("C:\\Users\\Home Pc\\Desktop\\ST558 Project 3 new\\ST558_Project3_GroupF\\")
-#read in data set .csv file in full
-#make sure that this is a relative path used...
-# ./ stays in the same file directory
-OnlineNewsPopularity<-read_csv("./OnlineNewsPopularity.csv", show_col_types = FALSE)
+
+OnlineNewsPopularity <- read_csv("./OnlineNewsPopularity.csv", show_col_types = FALSE)
 #call object OnlineNewsPopularity - our full raw data
 OnlineNewsPopularity
 ```
 
+We now subset the data for the data channel of interest: `r params$channel`: Is data channel '`r str_to_title(params$label)`'?
 
-We now subset the data for the data channel of interest: `r str_to_title(params$label)`.
 
 ```{r, echo=TRUE, eval=TRUE}
 #subsetting the OnlineNewsPopularity full raw data for the data channel of interest -- Lifestyle
@@ -172,25 +146,16 @@ table(Channel[[params$channel]])
 ```
 
 
-# Summarizations
+# EDA and Summarizations
 
-Now split the data set we’ve created into a training and testing set. Use p = 0.7. 
-
-Here, we are splitting our created data, Channel, into a training and test set with p = 0.7. These datasets will be called `ChannelTrain` and `ChannelTest`.
+Now we split the data set we’ve created into a 70% training set called "ChannelTrain" and a 30% testing set called "ChannelTest". We will be using the `caret` package with p = 0.7 to achieve the 70% training and 30% testing split.
 
 Note: A seed was set for reproducibility purposes.
 
 ``` {r, echo=TRUE, eval=TRUE}
 #seed is set for reproducibility 
 set.seed(123)
-#another way to split train and test data below
-# #indices to split on
-# train <- sample(1:nrow(my_heart), size = nrow(my_heart)*0.70)
-# test <- dplyr::setdiff(1:nrow(my_heart), train)
-# #subset
-# heartTrain <- my_heart[train, ]
-# heartTest <- my_heart[test, ]
-#indices to split on
+
 ChannelIndex <- createDataPartition(Channel$shares, p = 0.70, list = FALSE)
 #subset
 ChannelTrain <- Channel[ ChannelIndex, ]
@@ -199,20 +164,96 @@ ChannelTest  <- Channel[-ChannelIndex, ]
 
 
 
-You should produce some basic (but meaningful) summary statistics and plots about the training data you are working with (especially as it relates to your response).
+<!-- You should produce some basic (but meaningful) summary statistics and plots about the training data you are working with (especially as it relates to your response). -->
 
-As you will automate this same analysis across other data, you can’t describe the trends you see in the graph (unless you want to try to automate that!). You should describe what to look for in the summary statistics/plots to help the reader understand the summary or graph. Ex: A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created:
+<!-- As you will automate this same analysis across other data, you can’t describe the trends you see in the graph (unless you want to try to automate that!). You should describe what to look for in the summary statistics/plots to help the reader understand the summary or graph. Ex: A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created: -->
 
-'We can inspect the trend of shares as a function of the positive word rate. If the points
-show an upward trend, then articles with more positive words tend to be shared more often.
-If we see a negative trend then articles with more positive words tend to be shared less often.'
+<!-- 'We can inspect the trend of shares as a function of the positive word rate. If the points -->
+<!-- show an upward trend, then articles with more positive words tend to be shared more often. -->
+<!-- If we see a negative trend then articles with more positive words tend to be shared less often.' -->
 
-Each group member is responsible for producing some summary statistics (means, sds, contingency tables, etc.) and for producing at least three graphs (each) of the data.
+<!-- Each group member is responsible for producing some summary statistics (means, sds, contingency tables, etc.) and for producing at least three graphs (each) of the data. -->
 
-Whenever you start thinking about fitting a regression model, the first think you want to do is data exploration (EDA - exploratory data analysis). Best think you can do is create scatter plots for each explanatory variable against the response variable. Scatter plots give us useful visualizations. we will look at how to fit the line in R (overlay), then predict a response using that line.
+We begin by doing some exploratory data analysis(EDA). It should be noted that for the following EDA and summaries we use our training data.
+
+
+lets begin by Plotting the correlation between a few notable numeric variables.
+
+
+```{r}
+
+cor_mat <- cor(ChannelTrain %>% select(shares, n_tokens_title, n_tokens_content, num_imgs, num_videos, num_hrefs), method = "pearson")
+
+corrplot(cor_mat, hc.order = TRUE,
+type = "lower",
+tl.pos = "lt",
+title = "Correlation Coefficients plot",
+subtitle = "Correlation Coefficients plot",
+mar=c(0,0,2,0)
+)
+```
+
+From the above we note that none of our selected variables share a correlation with the number of shares. 
+
+Next lets create a few scatter plots to get a visual of the data.
+
+We start by examining Trend of Number of words in the content vs Number of shares, Trend of Number of images vs Number of shares, Trend of Number of videos vs Number of shares and Trend of Number of links vs Number of shares.
+
+```{r}
+ggplot(data = ChannelTrain, aes(y = shares, x = n_tokens_content)) +
+geom_point(aes(color = num_imgs)) +
+geom_smooth(method = "lm") +
+ggtitle("Trend of Number of words in the content vs Number of shares")
+```
+
+ 
+```{r}
+ggplot(data = ChannelTrain, aes(y = shares, x = num_imgs)) +
+geom_point(aes(color = n_tokens_content)) +
+geom_smooth(method = "lm") +
+ggtitle("Trend of Number of images vs Number of shares")
+```
+
+
+```{r}
+ggplot(data = ChannelTrain, aes(y = shares, x = num_videos)) +
+geom_point(aes(color = n_tokens_content)) +
+geom_smooth(method = "lm") +
+ggtitle("Trend of Number of videos vs Number of shares")
+```
+
+
+```{r}
+ggplot(data = ChannelTrain, aes(y = shares, x = num_hrefs)) +
+geom_point(aes(color = n_tokens_content)) +
+geom_smooth(method = "lm") +
+ggtitle("Trend of Number of links vs Number of shares")
+```
+
+From the four plots above we can see that the number of words in the content, number or images, number of videos and the number of links in the online news had little or no effect on the number of shares as they all show a weak trend.
+
+The following tibble shows the mean and standard deviation statistics concerning training data for a number of variables.
+
+```{r}
+meanSD1 <- tibble(Variable = c("Number of shares"), Mean = c(mean(ChannelTrain$shares)), std_dev = c(sd(ChannelTrain$shares)))
+
+meanSD2 <- tibble(Variable = c("Number of words in the title"), Mean = c(mean(ChannelTrain$n_tokens_title)), std_dev = c(sd(ChannelTrain$n_tokens_title)))
+
+meanSD3 <- tibble(Variable = c("Number of words in the content"), Mean = c(mean(ChannelTrain$n_tokens_content)), std_dev = c(sd(ChannelTrain$n_tokens_content)))
+
+meanSD4 <- tibble(Variable = c("Number of images"), Mean = c(mean(ChannelTrain$num_imgs)), std_dev = c(sd(ChannelTrain$num_imgs)))
+
+meanSD5 <- tibble(Variable = c("Number of videos"), Mean = c(mean(ChannelTrain$num_videos)), std_dev = c(sd(ChannelTrain$num_videos)))
+
+
+rbind(meanSD1, meanSD2, meanSD3, meanSD4, meanSD5)
+```
+
+
+Next we use the `summary()` function on some more of our variables of interest to get statistics
+
 
 ```{r, echo=TRUE, eval=TRUE}
-#this shows the summary stats for each variable in our dataset...
 # 31. weekday_is_monday: Was the article published on a Monday?
 summary(ChannelTrain$weekday_is_monday)
 # 32. weekday_is_tuesday: Was the article published on a Tuesday?
@@ -231,23 +272,49 @@ summary(ChannelTrain$weekday_is_sunday)
 summary(ChannelTrain$is_weekend)
 # 60. shares: Number of shares (target)
 summary(ChannelTrain$shares)
-#contigency tables
-# example: table (crabs$color, crabs$spine, crabs$y)
-# monday is the mot published articels... compare to diff of the week
-table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_tuesday)
+
+```
+
+Next we create some contingency tables.
+
+```{r}
+weekend <- table(ChannelTrain$is_weekend)
+weekend
+```
+
+The above table shows that for our training data `r weekend[2]` online news articles were shared during the weekend and `r weekend[1]` were shared during the week.
+
+
+
+
+
+```{r}
+mon_tue <- table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_tuesday)
+mon_tue
+```
+
+From the above table we see that for our training data `r mon_tue[2, 1]` online news articles were shared on a Monday, `r mon_tue[1, 2]` were shared on a Tuesday and `r mon_tue[1, 1]` were shared the rest of the week. 
+
+Since Monday is considered the beginning of the work week, it is worth considering how monday "stacks up with the other days. For the contingency tables below,  we can use a similar interpretation as we did for the previous table.
+
+```{r}
 table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_wednesday)
+
 table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_thursday)
+
 table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_friday)
-#sum stats for all 61 vars - not helpful...
-#Lifestlye_sumstats_Train <- summary(ChannelTrain)
-#calling Lifestlye_sumstats_Train object to see our summary stats
-#Lifestlye_sumstats_Train
-#check structure of objects
-#str(ChannelTrain)
-#str(Lifestlye_sumstats_Train)
-#plots include - scatter plots, correlation plots -- plots for continuous data...
-#do we need bar plots?
-#data for descriptive plots:
+
+table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_saturday)
+
+table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_sunday)
+
+```
+
+Next we create some box plots.
+```{r}
+
+# Magaritte EXPLAIN THIS
+
 plot_data_weekday_weekend <- ChannelTrain %>%
                                mutate ( weekday = case_when(
                                           weekday_is_monday    == 1 ~ "Monday"   ,
@@ -266,6 +333,7 @@ plot_data_weekday_weekend <- ChannelTrain %>%
                                                      "Sunday"),
                                           ordered = TRUE
                                           ) )
+
 #A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
 ggplot(data=plot_data_weekday_weekend, 
             aes(y=shares, x=weekday)) + 
@@ -436,6 +504,10 @@ ggplot(data=ChannelTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
 <!-- link to the html file even though the file we create is a .md file - github creates the .html for us. -->
 
 <!-- In the repo’s README.md file (which doesn’t need to be created from a .Rmd file, just use the one you initialize into the repo if you want) give a brief description of the purpose of the repo, a list of R packages used, links to the generated analyses, and the code used to create the analyses from a single .Rmd file (i.e. the render() code). -->
+
+
+
+
 
 # Modelling
 
