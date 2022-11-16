@@ -193,9 +193,9 @@ mar=c(0,0,2,0)
 )
 ```
 
-From the above we note that none of our selected variables share a correlation with the number of shares. 
+From the above plot we note that none of our selected variables appear to share any meaningful correlation with the number of shares. However number of words in the content and number of images appear to have a moderate/strong positive correlation.
 
-Next lets create a few scatter plots to get a visual of the data.
+Next, lets create a few scatter plots to get a better visual of this correlation.
 
 We start by examining Trend of Number of words in the content vs Number of shares, Trend of Number of images vs Number of shares, Trend of Number of videos vs Number of shares and Trend of Number of links vs Number of shares.
 
@@ -203,7 +203,8 @@ We start by examining Trend of Number of words in the content vs Number of share
 ggplot(data = ChannelTrain, aes(y = shares, x = n_tokens_content)) +
 geom_point(aes(color = num_imgs)) +
 geom_smooth(method = "lm") +
-ggtitle("Trend of Number of words in the content vs Number of shares")
+ggtitle("Trend of Number of words in the content vs Number of shares")+
+labs(x = "Number of words in the content" , y = "Number of shares")
 ```
 
  
@@ -211,7 +212,8 @@ ggtitle("Trend of Number of words in the content vs Number of shares")
 ggplot(data = ChannelTrain, aes(y = shares, x = num_imgs)) +
 geom_point(aes(color = n_tokens_content)) +
 geom_smooth(method = "lm") +
-ggtitle("Trend of Number of images vs Number of shares")
+ggtitle("Trend of Number of images vs Number of shares")+
+labs(x = "Number of images" , y = "Number of shares")
 ```
 
 
@@ -219,7 +221,8 @@ ggtitle("Trend of Number of images vs Number of shares")
 ggplot(data = ChannelTrain, aes(y = shares, x = num_videos)) +
 geom_point(aes(color = n_tokens_content)) +
 geom_smooth(method = "lm") +
-ggtitle("Trend of Number of videos vs Number of shares")
+ggtitle("Trend of Number of videos vs Number of shares")+
+  labs(x = "Number of videos" , y = "Number of shares")
 ```
 
 
@@ -227,10 +230,23 @@ ggtitle("Trend of Number of videos vs Number of shares")
 ggplot(data = ChannelTrain, aes(y = shares, x = num_hrefs)) +
 geom_point(aes(color = n_tokens_content)) +
 geom_smooth(method = "lm") +
-ggtitle("Trend of Number of links vs Number of shares")
+ggtitle("Trend of Number of links vs Number of shares")+
+  labs(x = "Number of links" , y = "Number of shares")
 ```
 
-From the four plots above we can see that the number of words in the content, number or images, number of videos and the number of links in the online news had little or no effect on the number of shares as they all show a weak trend.
+From the four plots above we can see that the number of words in the content, number or images, number of videos and the number of links in the online news all share a weak or negligible positive correlation to the number of shares as they all show an almost horizontal tend line.
+
+```{r}
+ggplot(data = ChannelTrain, aes(y = num_imgs, x = n_tokens_content)) +
+geom_point(aes(color = shares)) +
+geom_smooth(method = "lm") +
+ggtitle("Trend of Number of words in the content vs Number of images")+
+  labs(x = "Number of words in the content" , y = "Number of images")
+```
+
+The above plot shows that there is a moderate/strong positive correlation between the number of words in the content and number of images.
+
+Next lets calculate some statistics about data.
 
 The following tibble shows the mean and standard deviation statistics concerning training data for a number of variables.
 
@@ -295,7 +311,7 @@ mon_tue
 
 From the above table we see that for our training data `r mon_tue[2, 1]` online news articles were shared on a Monday, `r mon_tue[1, 2]` were shared on a Tuesday and `r mon_tue[1, 1]` were shared the rest of the week. 
 
-Since Monday is considered the beginning of the work week, it is worth considering how monday "stacks up with the other days. For the contingency tables below,  we can use a similar interpretation as we did for the previous table.
+Since Monday is considered the beginning of the work week, it is interesting to see how monday "stacks up with the other days. For the contingency tables below,  we can use a similar interpretation as we did for the previous table.
 
 ```{r}
 table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_wednesday)
@@ -309,10 +325,9 @@ table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_saturday)
 table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_sunday)
 
 ```
+Next let us examime the number of shares for the different days of the week using a contingency table and a bar plot
 
-Next we create some box plots.
 ```{r}
-
 # Magaritte EXPLAIN THIS
 
 plot_data_weekday_weekend <- ChannelTrain %>%
@@ -333,6 +348,22 @@ plot_data_weekday_weekend <- ChannelTrain %>%
                                                      "Sunday"),
                                           ordered = TRUE
                                           ) )
+
+table(plot_data_weekday_weekend$weekday)
+
+ggplot(data = plot_data_weekday_weekend, aes(x = weekday)) + 
+  geom_bar(aes(fill= weekday)) + 
+  ggtitle("Number of shares during the week")
+
+```
+
+Both the contingency tables and bar plot above concur that most of the articles were shared on a Wednesday and the least number of articles were shared on a Saturday.
+
+Next we create some box plots.
+```{r}
+
+
+
 
 #A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
 ggplot(data=plot_data_weekday_weekend, 
@@ -495,7 +526,7 @@ str(Lifestlye_sumstats_Train)
 #plots include - scatter plots, correlation plots -- plots for continuous data...
 #do we need bar plots?
 #A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
-ggplot(data=ChannelTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
+#ggplot(data=ChannelTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
 ```
 <!-- You’ll be automating the creation of documents using R Markdown (one for each data_channel_is_* setting, i.e. type of article in the data set provided). Each document should be rendered as a github_document from a single .Rmd file. In the README.md file you should create links to each of the documents you will create (Lifestyle analysis, Entertainment analysis, etc.). Links can be made to the sub-documents using relative -->
 <!-- paths. For instance, if you have all of the outputted .md files in the main directory you would just use markdown linking: -->
@@ -513,8 +544,9 @@ ggplot(data=ChannelTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
 
 The data is already split into 70% training and 30% test. Our main goal is to predict the number of shares. This will be our response variable. We will create four models each using 5-fold cross-validation. 
 
-Two models (first linear and random forest) will be multiple linear regression models, one will be a random forest model and the final model will be a boosted tree model. 
+Two models will be multiple linear regression models, one will be a random forest model and the final model will be a boosted tree model. We will then compare the models and declare a winner based on the model with the lowest (root mean squared error) rmse.
 
+We firstly give a brief explanation of a linear regression model.
 
 A Linear regression model is a supervised learning technique that is used to predict the value of a variable based on the value of other variable(s). The variable you want to predict is called the dependent variable or the response. The variable(s) you are using to predict is called the independent variable(s) or the predictor(s). 
 

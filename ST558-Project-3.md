@@ -258,10 +258,13 @@ mar=c(0,0,2,0)
 
 ![](ST558-Project-3_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-From the above we note that none of our selected variables share a
-correlation with the number of shares.
+From the above plot we note that none of our selected variables appear
+to share any meaningful correlation with the number of shares. However
+number of words in the content and number of images appear to have a
+moderate/strong positive correlation.
 
-Next lets create a few scatter plots to get a visual of the data.
+Next, lets create a few scatter plots to get a better visual of this
+correlation.
 
 We start by examining Trend of Number of words in the content vs Number
 of shares, Trend of Number of images vs Number of shares, Trend of
@@ -272,7 +275,8 @@ Number of shares.
 ggplot(data = ChannelTrain, aes(y = shares, x = n_tokens_content)) +
 geom_point(aes(color = num_imgs)) +
 geom_smooth(method = "lm") +
-ggtitle("Trend of Number of words in the content vs Number of shares")
+ggtitle("Trend of Number of words in the content vs Number of shares")+
+labs(x = "Number of words in the content" , y = "Number of shares")
 ```
 
 ![](ST558-Project-3_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
@@ -281,7 +285,8 @@ ggtitle("Trend of Number of words in the content vs Number of shares")
 ggplot(data = ChannelTrain, aes(y = shares, x = num_imgs)) +
 geom_point(aes(color = n_tokens_content)) +
 geom_smooth(method = "lm") +
-ggtitle("Trend of Number of images vs Number of shares")
+ggtitle("Trend of Number of images vs Number of shares")+
+labs(x = "Number of images" , y = "Number of shares")
 ```
 
 ![](ST558-Project-3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
@@ -290,7 +295,8 @@ ggtitle("Trend of Number of images vs Number of shares")
 ggplot(data = ChannelTrain, aes(y = shares, x = num_videos)) +
 geom_point(aes(color = n_tokens_content)) +
 geom_smooth(method = "lm") +
-ggtitle("Trend of Number of videos vs Number of shares")
+ggtitle("Trend of Number of videos vs Number of shares")+
+  labs(x = "Number of videos" , y = "Number of shares")
 ```
 
 ![](ST558-Project-3_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
@@ -299,15 +305,32 @@ ggtitle("Trend of Number of videos vs Number of shares")
 ggplot(data = ChannelTrain, aes(y = shares, x = num_hrefs)) +
 geom_point(aes(color = n_tokens_content)) +
 geom_smooth(method = "lm") +
-ggtitle("Trend of Number of links vs Number of shares")
+ggtitle("Trend of Number of links vs Number of shares")+
+  labs(x = "Number of links" , y = "Number of shares")
 ```
 
 ![](ST558-Project-3_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 From the four plots above we can see that the number of words in the
 content, number or images, number of videos and the number of links in
-the online news had little or no effect on the number of shares as they
-all show a weak trend.
+the online news all share a weak or negligible positive correlation to
+the number of shares as they all show an almost horizontal tend line.
+
+``` r
+ggplot(data = ChannelTrain, aes(y = num_imgs, x = n_tokens_content)) +
+geom_point(aes(color = shares)) +
+geom_smooth(method = "lm") +
+ggtitle("Trend of Number of words in the content vs Number of images")+
+  labs(x = "Number of words in the content" , y = "Number of images")
+```
+
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+The above plot shows that there is a moderate/strong positive
+correlation between the number of words in the content and number of
+images.
+
+Next lets calculate some statistics about data.
 
 The following tibble shows the mean and standard deviation statistics
 concerning training data for a number of variables.
@@ -440,8 +463,8 @@ From the above table we see that for our training data 222 online news
 articles were shared on a Monday, 240 were shared on a Tuesday and 1010
 were shared the rest of the week.
 
-Since Monday is considered the beginning of the work week, it is worth
-considering how monday “stacks up with the other days. For the
+Since Monday is considered the beginning of the work week, it is
+interesting to see how monday “stacks up with the other days. For the
 contingency tables below, we can use a similar interpretation as we did
 for the previous table.
 
@@ -490,7 +513,8 @@ table(ChannelTrain$weekday_is_monday, ChannelTrain$weekday_is_sunday)
     ##   0 1097  153
     ##   1  222    0
 
-Next we create some box plots.
+Next let us examime the number of shares for the different days of the
+week using a contingency table and a bar plot
 
 ``` r
 # Magaritte EXPLAIN THIS
@@ -514,6 +538,28 @@ plot_data_weekday_weekend <- ChannelTrain %>%
                                           ordered = TRUE
                                           ) )
 
+table(plot_data_weekday_weekend$weekday)
+```
+
+    ## 
+    ##    Monday   Tuesday Wednesday  Thursday    Friday  Saturday    Sunday 
+    ##       222       240       277       243       211       126       153
+
+``` r
+ggplot(data = plot_data_weekday_weekend, aes(x = weekday)) + 
+  geom_bar(aes(fill= weekday)) + 
+  ggtitle("Number of shares during the week")
+```
+
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+Both the contingency tables and bar plot above concur that most of the
+articles were shared on a Wednesday and the least number of articles
+were shared on a Saturday.
+
+Next we create some box plots.
+
+``` r
 #A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
 ggplot(data=plot_data_weekday_weekend, 
             aes(y=shares, x=weekday)) + 
@@ -522,7 +568,7 @@ ggplot(data=plot_data_weekday_weekend,
             geom_point(aes(color=weekday), position="jitter") 
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 # when we take the log of the data, we can see easier... Poisson...
@@ -542,7 +588,7 @@ ggplot(data=ChannelTrain %>%
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
 
 ``` r
 # 32. weekday_is_tuesday: Was the article published on a Tuesday
@@ -555,7 +601,7 @@ ggplot(data=ChannelTrain %>%
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-15-3.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-17-3.png)<!-- -->
 
 ``` r
 # 33. weekday_is_wednesday: Was the article published on a Wednesday?
@@ -568,7 +614,7 @@ ggplot(data=ChannelTrain %>%
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-15-4.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-17-4.png)<!-- -->
 
 ``` r
 # 34. weekday_is_thursday: Was the article published on a Thursday?
@@ -581,7 +627,7 @@ ggplot(data=ChannelTrain %>%
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-15-5.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-17-5.png)<!-- -->
 
 ``` r
 # 35. weekday_is_friday: Was the article published on a Friday?
@@ -594,7 +640,7 @@ ggplot(data=ChannelTrain %>%
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-15-6.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-17-6.png)<!-- -->
 
 ``` r
 # 36. weekday_is_saturday: Was the article published on a Saturday?
@@ -607,7 +653,7 @@ ggplot(data=ChannelTrain %>%
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-15-7.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-17-7.png)<!-- -->
 
 ``` r
 # 37. weekday_is_sunday: Was the article published on a Sunday?
@@ -620,7 +666,7 @@ ggplot(data=ChannelTrain %>%
             geom_point(aes(color=weekday_fctr), position="jitter", alpha=0.4) 
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-15-8.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-17-8.png)<!-- -->
 
 ``` r
 # # 38. is_weekend: Was the article published on the weekend? 
@@ -1589,13 +1635,13 @@ fit_Channel[["residuals"]]
 plot(fit_Channel)
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->![](ST558-Project-3_files/figure-gfm/unnamed-chunk-16-2.png)<!-- -->![](ST558-Project-3_files/figure-gfm/unnamed-chunk-16-3.png)<!-- -->![](ST558-Project-3_files/figure-gfm/unnamed-chunk-16-4.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->![](ST558-Project-3_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->![](ST558-Project-3_files/figure-gfm/unnamed-chunk-18-3.png)<!-- -->![](ST558-Project-3_files/figure-gfm/unnamed-chunk-18-4.png)<!-- -->
 
 ``` r
 ggplot(data=fit_Channel, aes(y=shares, x=rate_positive_words)) + geom_point()
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-16-5.png)<!-- -->
+![](ST558-Project-3_files/figure-gfm/unnamed-chunk-18-5.png)<!-- -->
 
 ``` r
 #EDA
@@ -1886,13 +1932,11 @@ str(Lifestlye_sumstats_Train)
 #plots include - scatter plots, correlation plots -- plots for continuous data...
 #do we need bar plots?
 #A scatter plot with the number of shares on the y-axis and the positive word rate on the x-axis is created below
-ggplot(data=ChannelTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
+#ggplot(data=ChannelTrain, aes(y=shares, x=rate_positive_words)) + geom_point()
 ```
 
-![](ST558-Project-3_files/figure-gfm/unnamed-chunk-16-6.png)<!-- -->
 <!-- You’ll be automating the creation of documents using R Markdown (one for each data_channel_is_* setting, i.e. type of article in the data set provided). Each document should be rendered as a github_document from a single .Rmd file. In the README.md file you should create links to each of the documents you will create (Lifestyle analysis, Entertainment analysis, etc.). Links can be made to the sub-documents using relative -->
 <!-- paths. For instance, if you have all of the outputted .md files in the main directory you would just use markdown linking: -->
-
 <!-- - The analysis for [Lifestyle articles is available here](LifestyleAnalysis.html). Note we -->
 <!-- link to the html file even though the file we create is a .md file - github creates the .html for us. -->
 <!-- In the repo’s README.md file (which doesn’t need to be created from a .Rmd file, just use the one you initialize into the repo if you want) give a brief description of the purpose of the repo, a list of R packages used, links to the generated analyses, and the code used to create the analyses from a single .Rmd file (i.e. the render() code). -->
@@ -1903,9 +1947,12 @@ The data is already split into 70% training and 30% test. Our main goal
 is to predict the number of shares. This will be our response variable.
 We will create four models each using 5-fold cross-validation.
 
-Two models (first linear and random forest) will be multiple linear
-regression models, one will be a random forest model and the final model
-will be a boosted tree model.
+Two models will be multiple linear regression models, one will be a
+random forest model and the final model will be a boosted tree model. We
+will then compare the models and declare a winner based on the model
+with the lowest (root mean squared error) rmse.
+
+We firstly give a brief explanation of a linear regression model.
 
 A Linear regression model is a supervised learning technique that is
 used to predict the value of a variable based on the value of other
