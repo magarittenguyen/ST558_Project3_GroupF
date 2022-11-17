@@ -34,6 +34,16 @@ forest model, and a boosting model. Lastly we will compare the four models and d
 
 The dataset we will be using is [Online News Popularity Data Set](https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity).
 
+# Required Packages
+
+The following packages are used for our data manipulation, prediction, etc.:
+
+* `tidyverse`: Tons of useful features for data manipulation and visualization!
+* `caret`    : Used for predictive modelling.
+* `shiny`    : makes it easy to build interactive web apps straight from R
+* `rmarkdown`: create dynamic analysis documents that combine codes and rendered output
+* `corrplot` : provides a visual exploratory tool on correlation matrix
+
 <!-- 6 Links for the Rendered Files -->
 
 # Summary Reports
@@ -49,16 +59,6 @@ The dataset we will be using is [Online News Popularity Data Set](https://archiv
 [Tech articles is available here](./Tech_Summary.html)
 
 [World articles is available here](./World_Summary.html)
-
-# Required Packages
-
-The following packages are used for our data manipulation, prediction, etc.:
-
-* `tidyverse`: Tons of useful features for data manipulation and visualization!
-* `caret`    : Used for predictive modelling.
-* `shiny`    : makes it easy to build interactive web apps straight from R
-* `rmarkdown`: create dynamic analysis documents that combine codes and rendered output
-* `corrplot` : provides a visual exploratory tool on correlation matrix
 
 <!-- Render Code -->
 
