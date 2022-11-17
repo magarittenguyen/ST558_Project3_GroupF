@@ -128,7 +128,7 @@ Channel <- OnlineNewsPopularity %>%
 Channel
 ```
 
-Here we can see that after subsetting for the `r str_to_title(params$channel)` variable, that we have `r length(Channel)` observations.
+Here we can see that after subsetting for the `r str_to_title(params$channel)` variable, that we have `r nrow(Channel)` observations.
 
 
 

@@ -195,7 +195,7 @@ Channel
     ## #   self_reference_avg_sharess <dbl>, weekday_is_monday <dbl>, weekday_is_tuesday <dbl>, …
 
 Here we can see that after subsetting for the Data_channel_is_tech
-variable, that we have 59 observations.
+variable, that we have 7346 observations.
 
 # EDA and Summarizations
 
