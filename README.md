@@ -5,6 +5,12 @@ Magaritte Nguyen and Matthew Sookoo
 
 <!-- In the repo’s README.md file (which doesn’t need to be created from a .Rmd file, just use the one you initialize into the repo if you want) give a brief description of the purpose of the repo, a list of R packages used, links to the generated analyses, and the code used to create the analyses from a single .Rmd file (i.e. the render() code). -->
 
+The purpose of this repository is for the collaborative efforts of Group F (members: Magaritte Nguyen and Matthew Sookoo) on the NC State ST558 Project 3, Fall 2022. Here, we will be reading in data pertaining to Mashable article sharing informatoin collected over the past 2 year. We will the create a summary report based on 4 different models (MLR model #1, MLR model #2, Random Forest, and Boosting) to be able to see which model has the best prediciton ability for sharing articles for 6 different channels. These channels cover topics like Lifestlye, Entertaiment, Business, Social Media, Tech, and World. 
+
+Please see the introduction below for more information.
+
+<!-- TOC -->
+
 -   <a href="#introduction" id="toc-introduction">Introduction</a>
     -   <a href="#more-about-the-variables"
         id="toc-more-about-the-variables">More about the variables</a>
@@ -15,110 +21,21 @@ Magaritte Nguyen and Matthew Sookoo
             variables</a>
 -   <a href="#required-packages" id="toc-required-packages">Required
     Packages</a>
--   <a href="#data" id="toc-data">Data</a>
-    -   <a href="#reading-in-the-data" id="toc-reading-in-the-data">Reading in
-        the data</a>
+-   <a href="#our-render-code:" id="our-render-code">Data</a> 
 
 <!-- setup -->
 
-# Introduction
+# Introduction 
 
-Our goal with this project is to take the data about articles published
-by Mashable (www.mashable.com) and create predictive models for the
-number of shares in social networks (popularity) then automating our
-Markdown reports. This dataset summarizes a heterogeneous set of
-features in a period of two years.
+Our goal with this project is to take the data about articles published by [Mashable](https://www.mashable.com) and create predictive models for the number 
+of shares in social networks (popularity) then automating our Markdown reports. 
 
-The way we will summarize the data and try to predict the number of
-shares is via linear regression, random forest, and boosting (will add
-more later)
+This dataset summarizes a heterogeneous set of features in a period of two years. 
 
--   briefly describes the data and the variables you have to work with
-    (just discuss the ones you want to use).
+Then we will do an Exploratory Data Analysis (EDA) and summarize the data and try to predict the number of shares in two linear regression models, a random
+forest model, and a boosting model. Lastly we will compare the four models and declare a winner (the model with the lowest root mean squared error (RMSE)).  
 
--   Your target variables is the shares variable.
-
--   mention the purpose of your analysis and the methods you’ll use to
-    model the response.
-
--   You’ll describe those in more detail later.
-
-Data Set Information:
-
--   The articles were published by Mashable (www.mashable.com) and their
-    content as the rights to reproduce it belongs to them. Hence, this
-    dataset does not share the original content but some statistics
-    associated with it. The original content be publicly accessed and
-    retrieved using the provided urls.
-
--   Acquisition date: January 8, 2015
-
--   The estimated relative performance values were estimated by the
-    authors using a Random Forest classifier and a rolling windows as
-    assessment method. See their article for more details on how the
-    relative performance values were set.
-
-Our goal with this project is to create predictive models and automating
-Markdown reports. We are using this [Online News Popularity Data
-Set](https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity).
-
-This dataset summarizes a heterogeneous set of features about articles
-published by [Mashable](http://www.mashable.com) in a period of two
-years.
-
-## More about the variables
-
-The data contains 39644 observations and 61 variables (58 predictive
-attributes, 2 non-predictive, 1 goal field) and we are interested in the
-number of shares of the online news. We only mention the one we use in
-our project.
-
-### Response variable
-
--   “shares” (Number of shares (target))
-
-### Independent or predictor variables
-
--   “data_channel_is\_\*” (Lifestyle, Entertainment, Business, Social
-    Media, Tech, World)
-
--   “n_tokens_title” (Number of words in the title),
-
--   “n_tokens_content” (Number of words in the content)
-
--   “num_imgs” (Number of images)
-
--   “num_videos” (Number of videos)
-
--   “is_weekend” (Was the article published on the weekend?)
-
--   “num_hrefs” (Number of links)
-
--   “weekday_is_monday” (Was the article published on a Monday?)
-
--   “weekday_is_tuesday” (Was the article published on a Tuesday?)
-
--   “weekday_is_wednesday” {Was the article published on a Wednesday?)
-
--   “weekday_is_thursday” (Was the article published on a Thursday?)
-
--   “weekday_is_friday” (Was the article published on a Friday?)
-
--   “self_reference_avg_sharess” (Avg. shares of referenced articles in
-    Mashable)
-
-# Required Packages
-
-The following packages are used for our data manipulation, prediction,
-etc.:
-
--   `tidyverse`: Tons of useful features for data manipulation and
-    visualization!
--   `caret`: Used for predictive modelling.
--   `shiny`
--   `rmarkdown`
-
-MORE ADDED LATER AS REQUIRED…
+The dataset we will be using is [Online News Popularity Data Set](https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity).
 
 <!-- 6 Links for the Rendered Files -->
 
@@ -134,7 +51,19 @@ MORE ADDED LATER AS REQUIRED…
 
 [World articles is available here](./World_Summary.html)
 
+# Required Packages
+
+The following packages are used for our data manipulation, prediction, etc.:
+
+* `tidyverse`: Tons of useful features for data manipulation and visualization!
+* `caret`    : Used for predictive modelling.
+* `shiny`    : makes it easy to build interactive web apps straight from R
+* `rmarkdown`: create dynamic analysis documents that combine codes and rendered output
+* `corrplot` : provides a visual exploratory tool on correlation matrix
+* 
 <!-- Render Code -->
+
+# Our Render Code:
 
 ```r
 #THIS IS THE AUTOMATION CODE BELOW!!!
