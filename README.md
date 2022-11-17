@@ -21,7 +21,7 @@ Please see the introduction below for more information.
             variables</a>
 -   <a href="#required-packages" id="toc-required-packages">Required
     Packages</a>
--   <a href="#our-render-code:" id="our-render-code">Data</a> 
+-   <a href="#our-render-code:" id="toc-our-render-code">Our Render Code</a> 
 
 <!-- setup -->
 
