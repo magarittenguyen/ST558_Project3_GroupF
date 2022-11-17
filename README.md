@@ -12,16 +12,9 @@ Please see the introduction below for more information.
 <!-- TOC -->
 
 -   <a href="#introduction" id="toc-introduction">Introduction</a>
-    -   <a href="#more-about-the-variables"
-        id="toc-more-about-the-variables">More about the variables</a>
-        -   <a href="#response-variable" id="toc-response-variable">Response
-            variable</a>
-        -   <a href="#independent-or-predictor-variables"
-            id="toc-independent-or-predictor-variables">Independent or predictor
-            variables</a>
 -   <a href="#required-packages" id="toc-required-packages">Required
     Packages</a>
--   <a href="#our-render-code:" id="toc-our-render-code">Our Render Code</a> 
+-   <a href="#our-render-code" id="toc-our-render-code">Our Render Code</a> 
 
 <!-- setup -->
 
