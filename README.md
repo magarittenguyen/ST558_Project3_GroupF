@@ -59,7 +59,7 @@ The following packages are used for our data manipulation, prediction, etc.:
 * `shiny`    : makes it easy to build interactive web apps straight from R
 * `rmarkdown`: create dynamic analysis documents that combine codes and rendered output
 * `corrplot` : provides a visual exploratory tool on correlation matrix
-* 
+
 <!-- Render Code -->
 
 # Our Render Code:
