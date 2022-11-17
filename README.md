@@ -3,6 +3,8 @@ ST558 Project 3 Group F
 Magaritte Nguyen and Matthew Sookoo
 2022-11-12
 
+<!-- In the repo’s README.md file (which doesn’t need to be created from a .Rmd file, just use the one you initialize into the repo if you want) give a brief description of the purpose of the repo, a list of R packages used, links to the generated analyses, and the code used to create the analyses from a single .Rmd file (i.e. the render() code). -->
+
 -   <a href="#introduction" id="toc-introduction">Introduction</a>
     -   <a href="#more-about-the-variables"
         id="toc-more-about-the-variables">More about the variables</a>
