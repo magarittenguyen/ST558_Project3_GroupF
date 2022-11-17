@@ -7,10 +7,13 @@ Magaritte Nguyen and Matthew Sookoo
 
 The purpose of this repository is for the collaborative efforts of Group F (Members: Magaritte Nguyen and Matthew Sookoo) on the NC State ST558 Project 3, Fall 2022. Here, we will be reading in data pertaining to Mashable article sharing informatoin collected over the past 2 year. We will then create a summary report based on 4 different models (MLR model #1, MLR model #2, Random Forest, and Boosting) to be able to see which model has the best prediciton ability for sharing articles for 6 different channels. These channels cover topics like Lifestlye, Entertaiment, Business, Social Media, Tech, and World. 
 
-Please see the introduction below for more information.
+Please see below for more information.
 
 <!-- TOC -->
 
+# Table of Contents
+
+-   <a href="#table-of-contents" id="toc-table-of-contents">Table of Contents</a>
 -   <a href="#introduction" id="toc-introduction">Introduction</a>
 -   <a href="#required-packages" id="toc-required-packages">Required
     Packages</a>
