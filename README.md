@@ -14,6 +14,7 @@ Please see the introduction below for more information.
 -   <a href="#introduction" id="toc-introduction">Introduction</a>
 -   <a href="#required-packages" id="toc-required-packages">Required
     Packages</a>
+-   <a href="#summary-reports" id="toc-summary-reports">Summary Reports</a> 
 -   <a href="#our-render-code" id="toc-our-render-code">Our Render Code</a> 
 
 <!-- setup -->
@@ -31,6 +32,8 @@ forest model, and a boosting model. Lastly we will compare the four models and d
 The dataset we will be using is [Online News Popularity Data Set](https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity).
 
 <!-- 6 Links for the Rendered Files -->
+
+# Summary Reports
 
 [Lifestyle articles is available here](./Lifestyle_Summary.html)
 
